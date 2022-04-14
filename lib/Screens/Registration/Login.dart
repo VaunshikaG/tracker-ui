@@ -47,7 +47,7 @@ class _LoginpgState extends State<Loginpg> {
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
-                    side: BorderSide(color: CustomTheme.Coral1),
+                    side: const BorderSide(color: CustomTheme.Coral1),
                   ),
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(30, 30, 30, 20),
@@ -61,7 +61,8 @@ class _LoginpgState extends State<Loginpg> {
                         //  email streambuilder is to listen stream from bloc
                         StreamBuilder<String>(
                           stream: bloc.loginEmail,
-                          builder: (context, AsyncSnapshot<String> snapshot) => Card(
+                          builder: (context, AsyncSnapshot<String> snapshot) =>
+                              Card(
                             elevation: 0,
                             margin: const EdgeInsets.only(bottom: 15),
                             shape: RoundedRectangleBorder(
@@ -73,36 +74,37 @@ class _LoginpgState extends State<Loginpg> {
                               controller: emailController,
                               keyboardType: TextInputType.emailAddress,
                               cursorColor: CustomTheme.Blue1,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
                               ),
                               decoration: InputDecoration(
                                 hintText: 'Email',
                                 errorText: snapshot.error,
-                                errorStyle: TextStyle(fontWeight: FontWeight.bold),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 20),
-
+                                errorStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: Colors.transparent,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
@@ -112,11 +114,11 @@ class _LoginpgState extends State<Loginpg> {
                           ),
                         ),
 
-
                         //  password
                         StreamBuilder(
                           stream: bloc.loginPswd,
-                          builder: (context, AsyncSnapshot<String> snapshot) => Card(
+                          builder: (context, AsyncSnapshot<String> snapshot) =>
+                              Card(
                             elevation: 0,
                             margin: const EdgeInsets.only(bottom: 10),
                             shape: RoundedRectangleBorder(
@@ -129,35 +131,37 @@ class _LoginpgState extends State<Loginpg> {
                               obscureText: _isObscure,
                               keyboardType: TextInputType.visiblePassword,
                               cursorColor: CustomTheme.Blue1,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
                               ),
                               decoration: InputDecoration(
                                 hintText: 'Password',
                                 errorText: snapshot.error,
-                                errorStyle: TextStyle(fontWeight: FontWeight.bold),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                                errorStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: Colors.transparent,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
@@ -176,16 +180,15 @@ class _LoginpgState extends State<Loginpg> {
                           ),
                         ),
 
-
                         //  login btn
                         StreamBuilder(
                           stream: bloc.isValid,
-                          builder: (context, snapshot) => Container(
+                          builder: (context, snapshot) => SizedBox(
                             height: 50,
                             width: 170,
                             child: Card(
-                              color: snapshot.hasError || !snapshot.hasData ?
-                              Colors.grey.shade600
+                              color: snapshot.hasError || !snapshot.hasData
+                                  ? Colors.grey.shade600
                                   : CustomTheme.Grey2,
                               elevation: 5,
                               shape: RoundedRectangleBorder(
@@ -193,16 +196,21 @@ class _LoginpgState extends State<Loginpg> {
                                 // side: BorderSide(color: CustomTheme.Blue3),
                               ),
                               child: MaterialButton(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 0),
                                 elevation: 5,
-                                onPressed: snapshot.hasError || !snapshot.hasData ? null : () async {
-                                  bloc.submit();
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(builder: (context) {
-                                        return Homepg();
-                                      }));
-                                },
-                                child: Text(
+                                onPressed:
+                                    snapshot.hasError || !snapshot.hasData
+                                        ? null
+                                        : () async {
+                                            bloc.submit();
+                                            Navigator.pushReplacement(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return Homepg();
+                                            }));
+                                          },
+                                child: const Text(
                                   'Login',
                                   style: TextStyle(
                                     fontSize: 18,
@@ -235,16 +243,12 @@ class _LoginpgState extends State<Loginpg> {
                   ),
                 ),
 
-
                 //  sign up
-                Padding(
+                const Padding(
                   padding: const EdgeInsets.only(top: 150),
                   child: Text(
                     'Create a new account',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold
-                    ),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Container(
@@ -265,10 +269,10 @@ class _LoginpgState extends State<Loginpg> {
                       onPressed: () {
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) {
-                              return Signuppg();
-                            }));
+                          return Signuppg();
+                        }));
                       },
-                      child: Text(
+                      child: const Text(
                         'Sign up >',
                         style: TextStyle(
                           fontSize: 18,

@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'New Demo',
+        title: 'Tracker',
         theme: ThemeData(fontFamily: 'Nunito'),
         home: SplashScreenView(
           navigateRoute: Loginpg(),
@@ -33,10 +33,10 @@ class MyApp extends StatelessWidget {
           duration: 3000,
           // imageSize: 100,
           // imageSrc: "Splash.gif",
-          text: "NEW\nMANAGEMENT",
+          text: "TRACKER",
           textType: TextType.TyperAnimatedText,
           textStyle: TextStyle(
-              fontSize: 30.0,
+              fontSize: 35.0,
               color: CustomTheme.Coral1,
               fontWeight: FontWeight.bold,
           ),

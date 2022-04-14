@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tracker_ui/BLoC/Signup_BloC.dart';
+import 'package:tracker_ui/Models/SignupModel.dart';
 import 'package:tracker_ui/Screens/Registration/Login.dart';
+import 'package:tracker_ui/api.dart';
+import '../../Common/Dialog.dart';
 import '../../Common/theme.dart';
 import '../Home/Home.dart';
 
@@ -13,6 +15,8 @@ class Signuppg extends StatefulWidget {
 
 class _SignuppgState extends State<Signuppg> {
   final formKeys = GlobalKey<FormState>();
+  SignupModel signupModel;
+  ApiService apiService = new ApiService();
 
   bool _isObscure1 = true;
 
@@ -26,7 +30,7 @@ class _SignuppgState extends State<Signuppg> {
   Widget build(BuildContext context) {
     final bloc = Provider.of<SignupBLoC>(context, listen: false);
 
-    return new WillPopScope(
+    return WillPopScope(
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Container(
@@ -39,7 +43,7 @@ class _SignuppgState extends State<Signuppg> {
                   margin: const EdgeInsets.only(top: 200),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
-                    side: BorderSide(color: CustomTheme.Coral1),
+                    side: const BorderSide(color: CustomTheme.Coral1),
                   ),
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(30, 30, 30, 20),
@@ -64,36 +68,36 @@ class _SignuppgState extends State<Signuppg> {
                               onChanged: bloc.changeFName,
                               cursorColor: CustomTheme.Blue1,
                               keyboardType: TextInputType.name,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
                               ),
                               decoration: InputDecoration(
                                 hintText: 'First name',
                                 errorText: snapshot.error,
-                                errorStyle:
-                                TextStyle(fontWeight: FontWeight.bold),
-                                contentPadding: EdgeInsets.only(left: 20),
+                                errorStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                                contentPadding: const EdgeInsets.only(left: 20),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: Colors.transparent,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
@@ -117,36 +121,36 @@ class _SignuppgState extends State<Signuppg> {
                               onChanged: bloc.changeLName,
                               cursorColor: CustomTheme.Blue1,
                               keyboardType: TextInputType.name,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
                               ),
                               decoration: InputDecoration(
                                 hintText: 'Last name',
                                 errorText: snapshot.error,
-                                errorStyle:
-                                TextStyle(fontWeight: FontWeight.bold),
-                                contentPadding: EdgeInsets.only(left: 20),
+                                errorStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                                contentPadding: const EdgeInsets.only(left: 20),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: Colors.transparent,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
@@ -170,36 +174,36 @@ class _SignuppgState extends State<Signuppg> {
                               onChanged: bloc.changeSemail,
                               cursorColor: CustomTheme.Blue1,
                               keyboardType: TextInputType.emailAddress,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
                               ),
                               decoration: InputDecoration(
                                 hintText: 'Email',
                                 errorText: snapshot.error,
-                                errorStyle:
-                                TextStyle(fontWeight: FontWeight.bold),
-                                contentPadding: EdgeInsets.only(left: 20),
+                                errorStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                                contentPadding: const EdgeInsets.only(left: 20),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: Colors.transparent,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
@@ -224,36 +228,36 @@ class _SignuppgState extends State<Signuppg> {
                               cursorColor: CustomTheme.Blue1,
                               obscureText: _isObscure1,
                               keyboardType: TextInputType.visiblePassword,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
                               ),
                               decoration: InputDecoration(
                                 hintText: 'Password',
                                 errorText: snapshot.error,
-                                errorStyle:
-                                TextStyle(fontWeight: FontWeight.bold),
-                                contentPadding: EdgeInsets.only(left: 20),
+                                errorStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                                contentPadding: const EdgeInsets.only(left: 20),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: Colors.transparent,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: CustomTheme.Grey2,
                                   ),
                                   borderRadius: BorderRadius.circular(5),
@@ -275,7 +279,7 @@ class _SignuppgState extends State<Signuppg> {
                         //  sign up btn
                         StreamBuilder(
                           stream: bloc.isValid,
-                          builder: (context, AsyncSnapshot snapshot) => Container(
+                          builder: (context, AsyncSnapshot snapshot) => SizedBox(
                             height: 50,
                             width: 170,
                             // margin: const EdgeInsets.only(top: 150),
@@ -289,19 +293,39 @@ class _SignuppgState extends State<Signuppg> {
                                 // side: BorderSide(color: CustomTheme.Blue3),
                               ),
                               child: MaterialButton(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 40, vertical: 0),
+                                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
                                 elevation: 5,
-                                onPressed: snapshot.hasError || !snapshot.hasData
-                                    ? null
-                                    : () async {
-                                  bloc.submit();
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(builder: (context) {
-                                        return Homepg();
-                                      }));
-                                },
-                                child: Text(
+                                onPressed: snapshot.hasError || !snapshot.hasData ? null : () async {
+                                  try {
+                                    String firstName = fnameController.text;
+                                    String lastName = lnameController.text;
+                                    String email = emailController.text;
+                                    String password = pswdController.text;
+                                    SignupModel newModel = await apiService.Register(firstName, lastName, email, password, context) ;
+                                    fnameController.text = '';
+                                    lnameController.text = '';
+                                    emailController.text = '';
+                                    pswdController.text = '';
+                                    setState(() {
+                                      signupModel = newModel;
+                                    });
+                                    bloc.submit();
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                                      return Homepg();
+                                    }));
+                                  } catch (e) {
+                                    showDialog(
+                                        context: context,
+                                        barrierDismissible: true,
+                                        builder: (dialogContext) {
+                                          return MyAlertDialog(
+                                            content: e,
+                                          );
+                                        });
+                                    print(e);
+                                  }
+                                  },
+                                child: const Text(
                                   'Sign up >',
                                   style: TextStyle(
                                     fontSize: 18,
@@ -319,8 +343,8 @@ class _SignuppgState extends State<Signuppg> {
                 ),
 
                 //  login
-                Padding(
-                  padding: const EdgeInsets.only(top: 80),
+                const Padding(
+                  padding: EdgeInsets.only(top: 80),
                   child: Text(
                     'Already have an account',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -347,7 +371,7 @@ class _SignuppgState extends State<Signuppg> {
                           return Loginpg();
                         }));
                       },
-                      child: Text(
+                      child: const Text(
                         'Login >',
                         style: TextStyle(
                           fontSize: 18,
