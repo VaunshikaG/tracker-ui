@@ -2,11 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
-import 'package:tracker_ui/Sports/theme.dart';
-
-import 'BLoC/Login_BloC.dart';
-import 'BLoC/Signup_BloC.dart';
-import 'Screens/Registration/Login.dart';
+import 'package:tracker_ui/BLoC/Login_BloC.dart';
+import 'package:tracker_ui/BLoC/Signup_BloC.dart';
+import 'package:tracker_ui/Screens/Registration/Login.dart';
+import 'package:tracker_ui/Common/theme.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,22 +25,22 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'New Demo',
         theme: ThemeData(fontFamily: 'Nunito'),
         home: SplashScreenView(
           navigateRoute: Loginpg(),
-          backgroundColor: MyTheme.Blue3,
+          backgroundColor: Colors.white,
           duration: 3000,
           // imageSize: 100,
           // imageSrc: "Splash.gif",
-          text: "SPORTS\nMANAGEMENT",
+          text: "NEW\nMANAGEMENT",
           textType: TextType.TyperAnimatedText,
           textStyle: TextStyle(
               fontSize: 30.0,
-              color: MyTheme.Blue1,
-              fontWeight: FontWeight.bold
+              color: CustomTheme.Coral1,
+              fontWeight: FontWeight.bold,
           ),
-          // backgroundColor: MyTheme.Coral2,
+          // backgroundColor: CustomTheme.Coral2,
         ),
       ),
     );

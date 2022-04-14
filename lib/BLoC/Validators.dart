@@ -60,26 +60,6 @@ mixin Validators {
     },
   );
 
-  //  mob validator
-  var mobValidator = StreamTransformer<String, String>.fromHandlers(
-    handleData: (mob, sink) {
-      if (mob.isEmpty) {
-        return sink.addError("Please enter phone number");
-      }
-      if (mob.length >=10) {
-        return sink.addError("Number should be less than 10 digits");
-      }
-      if (mob.length < 10) {
-        return sink.addError("Number should be more than 10 digits");
-      }
-      if(!RegExp(r"^[0-9]{10}").hasMatch(mob)) {
-        return sink.addError('Enter valid phone number');
-      } else {
-        sink.add(mob);
-      }
-    },
-  );
-
   //  signup pswd validator
   var signupPswdValidator = StreamTransformer<String, String>.fromHandlers(
     handleData: (pswd, sink) {
@@ -92,9 +72,10 @@ mixin Validators {
       if (pswd.length < 8) {
         return sink.addError("Password should be more than 6 characters");
       }
-      if(!RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$").hasMatch(pswd)) {
+      if(!RegExp(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$").hasMatch(pswd)) {
         return sink.addError('Enter valid email');
-      } else {
+      }
+      else {
         sink.add(pswd);
       }
     },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tracker_ui/Common/theme.dart';
 
 class Homepg extends StatefulWidget {
   @override
@@ -11,7 +12,13 @@ class _HomepgState extends State<Homepg> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('SPORTS'),
+        backgroundColor: CustomTheme.Grey2,
+        title: Text(
+          'NEW',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
       ),
       body: Container(),

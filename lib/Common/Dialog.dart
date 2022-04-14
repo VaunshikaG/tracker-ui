@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'Details.dart';
-
 class MyAlertDialog extends StatelessWidget {
   // final String title;
   final String content;
@@ -26,10 +24,7 @@ class MyAlertDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Details()));
+            // Navigator.push(context,MaterialPageRoute(builder: (context) => Details()));
           },
           child: Text(
             'OK',
