@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:tracker_ui/BLoC/Login_BloC.dart';
 import 'package:tracker_ui/Screens/Home/Home.dart';
 import 'package:tracker_ui/Screens/Registration/Signup.dart';
+import '../../Common/Constants.dart';
+import '../../Common/Prefs.dart';
 import '../../Common/theme.dart';
 
 class Loginpg extends StatefulWidget {
@@ -31,16 +33,31 @@ class _LoginpgState extends State<Loginpg> {
           margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
           child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 //  gif
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  // width: MediaQuery.of(context).size.width * 0.2,
                   margin: const EdgeInsets.fromLTRB(20, 100, 20, 10),
-                  // child: Image.asset(
-                  //   'assets/gifs/Splash.gif',
-                  //   height: 300,
-                  // ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image(
+                        image: AssetImage('assets/img/logo.PNG'),
+                        height: 170,
+                        width: 180,
+                      ),
+                      const Text(
+                        'TRACKER',
+                        style: TextStyle(
+                          fontSize: 35.0,
+                          color: CustomTheme.Coral1,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
 
                 Card(
@@ -206,8 +223,9 @@ class _LoginpgState extends State<Loginpg> {
                                             if (snapshot.hasData) {
                                               bloc.submit(context);
                                               print('login success!!');
-                                              Navigator.pushReplacement(context,
-                                                  MaterialPageRoute(builder: (context) => Homepg()));
+                                              Prefs.instance.setBooleanValue(CONST.status, true);
+                                              Navigator.pushNamed(context, '/home');
+                                              // Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Homepg()));
                                             }
                                           },
                                 child: const Text(

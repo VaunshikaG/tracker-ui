@@ -44,6 +44,7 @@ class LoginBLoC with Validators{
       LoginModel loginModel = await apiService.Login(email, password, buildContext);
       _data.sink.add(loginModel);
       ApiService.setToken(data['token'], data['refresulthToken']);
+      Navigator.pushNamed(buildContext, '/home');
     }
 
     print(_lEmail.value);

@@ -21,6 +21,7 @@ dependencies:
   rxdart: any
   flutter_session: ^0.1.1
   fluttertoast: ^8.0.9
+  shared_preferences: any
 
 dev_dependencies:
   flutter_test:
@@ -31,6 +32,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/gifs/
+    - assets/img/
 
   fonts:
     - family: CourierPrimeRegular

@@ -53,7 +53,7 @@ class SignupBLoC with Validators{
           lastName, email, password, buildContext);
       _data.sink.add(signupModel);
       ApiService.setToken(data['token'], data['refresulthToken']);
-      // Navigator.pushReplacement(buildContext, MaterialPageRoute(builder: (context) => Homepg()));
+      Navigator.pushNamed(buildContext, '/home');
     }
 
     print(_fName);

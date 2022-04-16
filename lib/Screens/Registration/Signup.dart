@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tracker_ui/BLoC/Signup_BloC.dart';
+import 'package:tracker_ui/Common/Constants.dart';
+import 'package:tracker_ui/Common/Prefs.dart';
 import 'package:tracker_ui/Models/Registration/SignupModel.dart';
 import 'package:tracker_ui/Screens/Registration/Login.dart';
 import 'package:tracker_ui/api.dart';
@@ -301,7 +303,9 @@ class _SignuppgState extends State<Signuppg> {
                                   if(snapshot.hasData) {
                                     bloc.submit(context);
                                     print('register success!!');
-                                    Navigator.pushReplacement(buildContext, MaterialPageRoute(builder: (context) => Homepg()));
+                                    Prefs.instance.setBooleanValue(CONST.status, true);
+                                    Navigator.pushNamed(buildContext, '/home');
+                                    // Navigator.pushReplacement(buildContext, MaterialPageRoute(builder: (context) => Homepg()));
                                   }
                                 },
                                 child: const Text(

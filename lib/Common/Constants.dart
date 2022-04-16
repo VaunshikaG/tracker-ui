@@ -5,4 +5,12 @@ class URL {
   static const String register_url = 'users/register';
   static const String login_url = 'users/login';
   static const String categories_url = 'categories';
+
+  static const String status = 'categories';
+}
+
+class CONST {
+  const CONST();
+
+  static const String status = 'False';
 }

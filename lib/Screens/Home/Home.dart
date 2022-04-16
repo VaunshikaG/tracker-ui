@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tracker_ui/Common/theme.dart';
 import 'package:tracker_ui/api.dart';
 
@@ -8,23 +9,31 @@ class Homepg extends StatefulWidget {
 }
 
 class _HomepgState extends State<Homepg> {
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: CustomTheme.Grey2,
-        title: Text(
-          'NEW',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: CustomTheme.Grey2,
+          title: Text(
+            'NEW',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: Container(
-        margin: const EdgeInsets.only(top: 200),
-        child: MaterialButton(
+        body: Container(
+          margin: const EdgeInsets.only(top: 200),
+          child: const Text(
+            'Log out',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          /*MaterialButton(
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
           elevation: 5,
           onPressed: () {
@@ -39,8 +48,10 @@ class _HomepgState extends State<Homepg> {
               color: Colors.white,
             ),
           ),
+        ),*/
         ),
       ),
+      onWillPop: () => SystemNavigator.pop(),
     );
   }
 }
