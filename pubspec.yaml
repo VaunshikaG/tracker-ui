@@ -20,6 +20,7 @@ dependencies:
   provider: any
   rxdart: any
   flutter_session: ^0.1.1
+  fluttertoast: ^8.0.9
 
 dev_dependencies:
   flutter_test:

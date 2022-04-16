@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tracker_ui/Common/theme.dart';
+import 'package:tracker_ui/api.dart';
 
 class Homepg extends StatefulWidget {
   @override
@@ -21,7 +22,25 @@ class _HomepgState extends State<Homepg> {
         ),
         centerTitle: true,
       ),
-      body: Container(),
+      body: Container(
+        margin: const EdgeInsets.only(top: 200),
+        child: MaterialButton(
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
+          elevation: 5,
+          onPressed: () {
+            Navigator.popAndPushNamed(context, '/login');
+            ApiService.removeToken();
+          },
+          child: const Text(
+            'Log out',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

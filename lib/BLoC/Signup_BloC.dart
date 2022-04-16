@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:tracker_ui/BLoC/Validators.dart';
-import 'package:tracker_ui/Models/SignupModel.dart';
+import 'package:tracker_ui/Models/Registration/SignupModel.dart';
 
 import '../Screens/Home/Home.dart';
 import '../api.dart';
+
+
+final blocSignup = SignupBLoC();
 
 class SignupBLoC with Validators{
   //  stream controllers
@@ -14,6 +17,8 @@ class SignupBLoC with Validators{
   final _lName = BehaviorSubject<String>();
   final _sEmail = BehaviorSubject<String>();
   final _sPswd = BehaviorSubject<String>();
+
+  final _data = PublishSubject();
 
   //  getters
   Stream<String> get fName => _fName.stream.transform(nameValidator);
@@ -30,29 +35,31 @@ class SignupBLoC with Validators{
   Function(String) get changeSemail => _sEmail.sink.add;
   Function(String) get changeSpswd => _sPswd.sink.add;
 
-  dynamic register(BuildContext buildContext) async {
+  //  api call
+  dynamic submit(BuildContext buildContext) async {
     ApiService apiService = new ApiService();
 
-    final result = await apiService.Register(_fName.value, _lName.value, _sEmail.value, _sPswd.value);
-    final data = SignupModel.fromJson(jsonDecode(result)) as Map<String, dynamic>;
+    final result = await apiService.Register(_fName.value, _lName.value,
+      _sEmail.value, _sPswd.value, buildContext);
+    final data = SignupModel.fromJson(jsonDecode(result)) as Map<SignupModel, dynamic>;
 
-    if (data['status'] == 200) {
-      print('email : ' + _sEmail.value);
-      print('password : ' + _sPswd.value);
+    if (data != null) {
+      String firstName = _fName.value;
+      String lastName = _lName.value;
+      String email = _sEmail.value;
+      String password = _sPswd.value;
 
-      // ApiService.setToken(data['token'], data['refresulthToken']);
-      Navigator.pushReplacement(buildContext, MaterialPageRoute(builder: (context) => Homepg()));
-      return data;
+      SignupModel signupModel = await apiService.Register(firstName,
+          lastName, email, password, buildContext);
+      _data.sink.add(signupModel);
+      ApiService.setToken(data['token'], data['refresulthToken']);
+      // Navigator.pushReplacement(buildContext, MaterialPageRoute(builder: (context) => Homepg()));
     }
-  }
 
-  //Submit
-  void submit() {
-      //TODO: CALL API
-      print(_fName);
-      print(_lName);
-      print(_sEmail);
-      print(_sPswd);
+    print(_fName);
+    print(_lName);
+    print(_sEmail);
+    print(_sPswd);
   }
 
   void dispose() {

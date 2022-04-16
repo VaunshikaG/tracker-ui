@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-{
+/*{
 try {
 if(snapshot.error) {
 CustomSnackBar(context, Text
@@ -69,4 +69,4 @@ content: e,
 });
 print(e);
 }
-},
+},*/

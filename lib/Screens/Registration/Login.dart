@@ -203,12 +203,12 @@ class _LoginpgState extends State<Loginpg> {
                                     snapshot.hasError || !snapshot.hasData
                                         ? null
                                         : () async {
-                                            bloc.submit();
-                                            Navigator.pushReplacement(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return Homepg();
-                                            }));
+                                            if (snapshot.hasData) {
+                                              bloc.submit(context);
+                                              print('login success!!');
+                                              Navigator.pushReplacement(context,
+                                                  MaterialPageRoute(builder: (context) => Homepg()));
+                                            }
                                           },
                                 child: const Text(
                                   'Login',

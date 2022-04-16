@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tracker_ui/BLoC/Signup_BloC.dart';
-import 'package:tracker_ui/Models/SignupModel.dart';
+import 'package:tracker_ui/Models/Registration/SignupModel.dart';
 import 'package:tracker_ui/Screens/Registration/Login.dart';
 import 'package:tracker_ui/api.dart';
 import '../../Common/Dialog.dart';
@@ -298,11 +298,11 @@ class _SignuppgState extends State<Signuppg> {
                                 elevation: 5,
                                 onPressed: snapshot.hasError || !snapshot
                                     .hasData ? null : () async {
-                                  if (snapshot.hasError) {
-                                    print(snapshot.error);
-                                    return null;
+                                  if(snapshot.hasData) {
+                                    bloc.submit(context);
+                                    print('register success!!');
+                                    Navigator.pushReplacement(buildContext, MaterialPageRoute(builder: (context) => Homepg()));
                                   }
-                                  return bloc.register(context);
                                 },
                                 child: const Text(
                                   'Sign up >',
