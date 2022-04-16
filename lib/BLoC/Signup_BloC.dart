@@ -1,7 +1,12 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:tracker_ui/BLoC/Validators.dart';
+import 'package:tracker_ui/Models/SignupModel.dart';
+
+import '../Screens/Home/Home.dart';
+import '../api.dart';
 
 class SignupBLoC with Validators{
   //  stream controllers
@@ -25,6 +30,21 @@ class SignupBLoC with Validators{
   Function(String) get changeSemail => _sEmail.sink.add;
   Function(String) get changeSpswd => _sPswd.sink.add;
 
+  dynamic register(BuildContext buildContext) async {
+    ApiService apiService = new ApiService();
+
+    final result = await apiService.Register(_fName.value, _lName.value, _sEmail.value, _sPswd.value);
+    final data = SignupModel.fromJson(jsonDecode(result)) as Map<String, dynamic>;
+
+    if (data['status'] == 200) {
+      print('email : ' + _sEmail.value);
+      print('password : ' + _sPswd.value);
+
+      // ApiService.setToken(data['token'], data['refresulthToken']);
+      Navigator.pushReplacement(buildContext, MaterialPageRoute(builder: (context) => Homepg()));
+      return data;
+    }
+  }
 
   //Submit
   void submit() {

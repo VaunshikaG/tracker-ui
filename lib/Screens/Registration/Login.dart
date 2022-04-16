@@ -188,7 +188,7 @@ class _LoginpgState extends State<Loginpg> {
                             width: 170,
                             child: Card(
                               color: snapshot.hasError || !snapshot.hasData
-                                  ? Colors.grey.shade600
+                                  ? Colors.blueGrey
                                   : CustomTheme.Grey2,
                               elevation: 5,
                               shape: RoundedRectangleBorder(
@@ -247,7 +247,7 @@ class _LoginpgState extends State<Loginpg> {
                 const Padding(
                   padding: const EdgeInsets.only(top: 150),
                   child: Text(
-                    'Create a new account',
+                    'Create a new.dart account',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                 ),

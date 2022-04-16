@@ -1,5 +1,5 @@
 name: tracker_ui
-description: A new Flutter project.
+description: A new.dart Flutter project.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -16,9 +16,10 @@ dependencies:
   cupertino_icons: ^1.0.4
   splash_screen_view: ^3.0.0
   local_auth: ^1.1.9
-  http:
-  provider:
-  rxdart:
+  http: any
+  provider: any
+  rxdart: any
+  flutter_session: ^0.1.1
 
 dev_dependencies:
   flutter_test:

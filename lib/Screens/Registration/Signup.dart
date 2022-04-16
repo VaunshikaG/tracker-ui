@@ -5,6 +5,7 @@ import 'package:tracker_ui/Models/SignupModel.dart';
 import 'package:tracker_ui/Screens/Registration/Login.dart';
 import 'package:tracker_ui/api.dart';
 import '../../Common/Dialog.dart';
+import '../../Common/snackbar.dart';
 import '../../Common/theme.dart';
 import '../Home/Home.dart';
 
@@ -33,7 +34,7 @@ class _SignuppgState extends State<Signuppg> {
     return WillPopScope(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Container(
+        body: Builder(builder: (context) => Container(
           margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
           child: SingleChildScrollView(
             child: Column(
@@ -279,13 +280,13 @@ class _SignuppgState extends State<Signuppg> {
                         //  sign up btn
                         StreamBuilder(
                           stream: bloc.isValid,
-                          builder: (context, AsyncSnapshot snapshot) => SizedBox(
+                          builder: (buildContext, AsyncSnapshot snapshot) => SizedBox(
                             height: 50,
                             width: 170,
                             // margin: const EdgeInsets.only(top: 150),
                             child: Card(
                               color: snapshot.hasError || !snapshot.hasData
-                                  ? Colors.grey.shade600
+                                  ? Colors.blueGrey
                                   : CustomTheme.Grey2,
                               elevation: 5,
                               shape: RoundedRectangleBorder(
@@ -295,36 +296,14 @@ class _SignuppgState extends State<Signuppg> {
                               child: MaterialButton(
                                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
                                 elevation: 5,
-                                onPressed: snapshot.hasError || !snapshot.hasData ? null : () async {
-                                  try {
-                                    String firstName = fnameController.text;
-                                    String lastName = lnameController.text;
-                                    String email = emailController.text;
-                                    String password = pswdController.text;
-                                    SignupModel newModel = await apiService.Register(firstName, lastName, email, password, context) ;
-                                    fnameController.text = '';
-                                    lnameController.text = '';
-                                    emailController.text = '';
-                                    pswdController.text = '';
-                                    setState(() {
-                                      signupModel = newModel;
-                                    });
-                                    bloc.submit();
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-                                      return Homepg();
-                                    }));
-                                  } catch (e) {
-                                    showDialog(
-                                        context: context,
-                                        barrierDismissible: true,
-                                        builder: (dialogContext) {
-                                          return MyAlertDialog(
-                                            content: e,
-                                          );
-                                        });
-                                    print(e);
+                                onPressed: snapshot.hasError || !snapshot
+                                    .hasData ? null : () async {
+                                  if (snapshot.hasError) {
+                                    print(snapshot.error);
+                                    return null;
                                   }
-                                  },
+                                  return bloc.register(context);
+                                },
                                 child: const Text(
                                   'Sign up >',
                                   style: TextStyle(
@@ -385,6 +364,7 @@ class _SignuppgState extends State<Signuppg> {
               ],
             ),
           ),
+        ),
         ),
       ),
       onWillPop: () => Navigator.push(

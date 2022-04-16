@@ -7,10 +7,6 @@ import 'package:tracker_ui/BLoC/Signup_BloC.dart';
 import 'package:tracker_ui/Screens/Registration/Login.dart';
 import 'package:tracker_ui/Common/theme.dart';
 
-import 'Screens/Home/Home.dart';
-import 'Screens/Registration/Signup.dart';
-import 'api.dart';
-
 void main() {
   runApp(MyApp());
 }
@@ -35,18 +31,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: SplashScreenView(
-          navigateRoute: FutureBuilder(
-            // future: ApiService.getToken(),
-            builder: (_, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasData) {
-                return Homepg();
-              } else {
-                return Signuppg();
-              }
-            },
-          ),
+          navigateRoute: Loginpg(),
           backgroundColor: Colors.white,
           duration: 3000,
           // imageSize: 100,
@@ -65,4 +50,23 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
+{
+try {
+if(snapshot.error) {
+CustomSnackBar(context, Text
+(snapshot.error));
+} else {
+return bloc.register(context);
+}
+} catch (e) {
+showDialog(
+context: context,
+barrierDismissible: true,
+builder: (dialogContext) {
+return MyAlertDialog(
+content: e,
+);
+});
+print(e);
+}
+},
