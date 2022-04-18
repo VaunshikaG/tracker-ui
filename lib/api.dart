@@ -61,7 +61,7 @@ class ApiService {
           "lastName": lastName,
           "email": email,
           "password": password,
-          "token": 'SdxIpaQp!81XS#QP5%w^cTCIV*DYr',
+          // "token": 'SdxIpaQp!81XS#QP5%w^cTCIV*DYr',
         }),
       );
 
@@ -110,7 +110,7 @@ class ApiService {
         body: jsonEncode(<String, String>{
           "email": email,
           "password": password,
-          "token": 'SdxIpaQp!81XS#QP5%w^cTCIV*DYr',
+          // "token": 'SdxIpaQp!81XS#QP5%w^cTCIV*DYr',
         }),
       );
 

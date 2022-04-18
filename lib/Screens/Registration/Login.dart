@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tracker_ui/BLoC/Login_BloC.dart';
 import 'package:tracker_ui/Screens/Home/Home.dart';
 import 'package:tracker_ui/Screens/Registration/Signup.dart';
+import 'package:tracker_ui/api.dart';
 import '../../Common/Constants.dart';
 import '../../Common/Prefs.dart';
 import '../../Common/theme.dart';
@@ -21,6 +23,7 @@ class _LoginpgState extends State<Loginpg> {
   TextEditingController emailController;
   TextEditingController pswdController;
 
+
   @override
   Widget build(BuildContext context) {
     //  calling bloc class
@@ -33,8 +36,6 @@ class _LoginpgState extends State<Loginpg> {
           margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 //  gif
                 Container(
@@ -223,9 +224,8 @@ class _LoginpgState extends State<Loginpg> {
                                             if (snapshot.hasData) {
                                               bloc.submit(context);
                                               print('login success!!');
-                                              Prefs.instance.setBooleanValue(CONST.status, true);
-                                              Navigator.pushNamed(context, '/home');
-                                              // Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Homepg()));
+                                              Prefs.instance.setBooleanValue(CONST.LoggedIn, true);
+                                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Homepg()));
                                             }
                                           },
                                 child: const Text(

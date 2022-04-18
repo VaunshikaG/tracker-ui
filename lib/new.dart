@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:splash_screen_view/SplashScreenView.dart';
 import 'package:tracker_ui/BLoC/Login_BloC.dart';
 import 'package:tracker_ui/BLoC/Signup_BloC.dart';
 import 'package:tracker_ui/Screens/Registration/Login.dart';
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Nunito',
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: SplashScreenView(
+        /*home: SplashScreenView(
           navigateRoute: Loginpg(),
           backgroundColor: Colors.white,
           duration: 3000,
@@ -44,7 +43,7 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
           // backgroundColor: CustomTheme.Coral2,
-        ),
+        ),*/
       ),
     );
   }

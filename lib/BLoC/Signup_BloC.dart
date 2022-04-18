@@ -52,8 +52,9 @@ class SignupBLoC with Validators{
       SignupModel signupModel = await apiService.Register(firstName,
           lastName, email, password, buildContext);
       _data.sink.add(signupModel);
-      ApiService.setToken(data['token'], data['refresulthToken']);
-      Navigator.pushNamed(buildContext, '/home');
+      // ApiService.setToken(data['token'], data['refresulthToken']);
+      Navigator.of(buildContext).pushReplacement(MaterialPageRoute(builder: (context) =>
+          Homepg()));
     }
 
     print(_fName);

@@ -303,9 +303,8 @@ class _SignuppgState extends State<Signuppg> {
                                   if(snapshot.hasData) {
                                     bloc.submit(context);
                                     print('register success!!');
-                                    Prefs.instance.setBooleanValue(CONST.status, true);
-                                    Navigator.pushNamed(buildContext, '/home');
-                                    // Navigator.pushReplacement(buildContext, MaterialPageRoute(builder: (context) => Homepg()));
+                                    Prefs.instance.setBooleanValue(CONST.LoggedIn, true);
+                                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Homepg()));
                                   }
                                 },
                                 child: const Text(
