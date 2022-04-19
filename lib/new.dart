@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Nunito',
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        /*home: SplashScreenView(
+        */
+/*home: SplashScreenView(
           navigateRoute: Loginpg(),
           backgroundColor: Colors.white,
           duration: 3000,
@@ -43,12 +45,14 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
           // backgroundColor: CustomTheme.Coral2,
-        ),*/
+        ),*//*
+
       ),
     );
   }
 }
 
+*/
 /*{
 try {
 if(snapshot.error) {

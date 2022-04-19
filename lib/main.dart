@@ -6,67 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:splash_screen_view/SplashScreenView.dart';
 import 'package:tracker_ui/BLoC/Login_BloC.dart';
 import 'package:tracker_ui/BLoC/Signup_BloC.dart';
 import 'package:tracker_ui/Common/Dialog.dart';
 import 'package:tracker_ui/Common/theme.dart';
 import 'package:tracker_ui/Screens/Registration/Login.dart';
-import 'package:tracker_ui/Screens/Registration/Signup.dart';
 import 'Common/Constants.dart';
 import 'Common/Prefs.dart';
 import 'Screens/Home/Home.dart';
 
 void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
-
-  AnimationController animationController;
-  Animation<double> animation;
-
-  bool _isLoggedIn = false;
-
-  @override
-  void initState() {
-
-    _isLoggedIn = false;
-
-    Prefs.instance.getBooleanValue(CONST.LoggedIn).then((value) =>
-        setState(() {_isLoggedIn = value;}));
-    animationController = AnimationController(vsync: this, duration: new Duration(seconds: 2));
-    // animation = CurvedAnimation(parent: animationController, curve: Curves.easeInQuint);
-    // animation.addListener(() => setState(() {}));
-    animationController.forward();
-
-
-    Timer(const Duration(seconds: 5), () async {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final bool loggged = prefs.getBool(CONST.LoggedIn);
-
-      if (loggged == false) {
-        _isLoggedIn = false;
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => new Loginpg()));
-        print('login');
-      } else if (loggged == true){
-        _isLoggedIn = true;
-        Navigator.pushReplacement((context),
-            MaterialPageRoute(builder: (context) => new Homepg()));
-        print('home');
-      } else {
-        print('Error');
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
+  runApp(
+    MultiProvider(
       providers: [
         Provider<LoginBLoC>(
           create: (context) => LoginBLoC(),
@@ -82,59 +34,67 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           fontFamily: 'Nunito',
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: Scaffold(
-          backgroundColor: Colors.white,
-          body: Center(
-            child: Container(
-              // height: animation.value * 300,
-              // width: animation.value * 300,
-              child: Text(
-                "TRACKER",
-                style: TextStyle(
-                  fontSize: 35.0,
-                  color: CustomTheme.Coral1,
-                  fontWeight: FontWeight.bold,
-                ),
+        home: Splash(),
+      ),
+    ),
+  );
+}
+
+class Splash extends StatefulWidget {
+  @override
+  State<Splash> createState() => _SplashState();
+}
+
+class _SplashState extends State<Splash> {
+  AnimationController animationController;
+  Animation<double> animation;
+
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    _isLoggedIn = false;
+
+    Prefs.instance.getBooleanValue(CONST.LoggedIn).then((value) =>
+        setState(() {_isLoggedIn = value;}));
+
+    Timer(const Duration(seconds: 3), () => _checkUserIsLogged());
+    // Future.delayed(const Duration(seconds: 1), () => _checkUserIsLogged());
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: AnimatedTextKit(
+          animatedTexts: [
+            WavyAnimatedText(
+              'TRACKER',
+              textStyle: const TextStyle(
+                fontSize: 40.0,
+                color: CustomTheme.Coral1,
+                fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  void _checkUserIsLogged() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final bool loggged = prefs.getBool(CONST.LoggedIn);
+  void _checkUserIsLogged()  {
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // _isLoggedIn = Prefs.instance.getBooleanValue(CONST.LoggedIn) as bool;
 
-    if (loggged == false) {
-      _isLoggedIn = false;
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => new Loginpg()));
-      print('login');
-    } else if (loggged == true){
-      _isLoggedIn = true;
-      Navigator.pushReplacement((context), MaterialPageRoute(builder: (context) => new Homepg()));
+    if (_isLoggedIn){
       print('home');
-    } else {
-      MyAlertDialog(
-        actions: [
-          TextButton(
-            onPressed: () {
-              SystemNavigator.pop();
-            },
-            child: Text(
-              'OK',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-        content: 'Cannot open app',
-      );
-      print('Error');
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Homepg()));
+    } else if (!_isLoggedIn) {
+      print('login');
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Loginpg()));
     }
   }
 
@@ -152,6 +112,15 @@ Widget text() {
         ),
         textAlign: TextAlign.center,
         speed: const Duration(milliseconds: 2000),
+      ),
+      WavyAnimatedText(
+        'TRACKER',
+        textStyle: TextStyle(
+          fontSize: 40.0,
+          color: CustomTheme.Coral1,
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
       ),
     ],
   );
