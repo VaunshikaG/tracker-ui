@@ -18,8 +18,14 @@ import 'Common/Prefs.dart';
 import 'Screens/Home/Home.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
       providers: [
         Provider<LoginBLoC>(
           create: (context) => LoginBLoC(),
@@ -37,14 +43,16 @@ void main() {
         ),
         home: Splash(),
         routes: {
+          '/myapp': (_) => MyApp(),
           '/home': (_) => Homepg(),
           '/login': (_) => new Loginpg(),
           '/signup': (_) => new Signuppg(),
         },
       ),
-    ),
-  );
+    );
+  }
 }
+
 
 class Splash extends StatefulWidget {
   @override
