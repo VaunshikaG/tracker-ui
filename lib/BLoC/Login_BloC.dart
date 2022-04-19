@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tracker_ui/BLoC/Validators.dart';
 import 'package:tracker_ui/Common/Constants.dart';
-import 'package:tracker_ui/Common/Prefs.dart';
 import 'package:tracker_ui/Models/Registration/LoginModel.dart';
 import '../Screens/Home/Home.dart';
 import '../api.dart';
@@ -34,30 +31,29 @@ class LoginBLoC with Validators{
   bool isLoggedIn = false;
 
   //  api call
-  dynamic submit(BuildContext buildContext) async {
+  dynamic submit(BuildContext buildContext) {
     ApiService apiService = new ApiService();
 
-    final result = await apiService.Login(_lEmail.value, _lPswd
-        .value, buildContext);
-    final Map<String, dynamic> data = LoginModel.fromJson(jsonDecode(result)) as Map<String,
-        dynamic>;
+    apiService.Login(_lEmail.value, _lPswd
+        .value, buildContext).then((value) async {
+      if (value != null) {
+        final prefs = await SharedPreferences.getInstance();
 
-    if (data != null) {
-      final prefs = await SharedPreferences.getInstance();
+        String email = _lEmail.value;
+        String password = _lPswd.value;
 
-      String email = _lEmail.value;
-      String password = _lPswd.value;
+        prefs.setBool(CONST.LoggedIn, true);
+        prefs.setString(CONST.email, email);
+        prefs.setString(CONST.pswd, password);
 
-      prefs.setBool(CONST.LoggedIn, true);
-      prefs.setString(CONST.email, email);
-      prefs.setString(CONST.pswd, password);
+        LoginModel loginModel = await apiService.Login(email, password, buildContext);
+        _data.sink.add(loginModel);
+        // ApiService.setToken(data['token'], data['refresulthToken']);
+        Navigator.of(buildContext).pushReplacement(MaterialPageRoute(builder: (context) =>
+            Homepg()));
+      }
 
-      LoginModel loginModel = await apiService.Login(email, password, buildContext);
-      _data.sink.add(loginModel);
-      // ApiService.setToken(data['token'], data['refresulthToken']);
-      Navigator.of(buildContext).pushReplacement(MaterialPageRoute(builder: (context) =>
-          Homepg()));
-    }
+    });
 
     print(_lEmail.value);
     print(_lPswd.value);

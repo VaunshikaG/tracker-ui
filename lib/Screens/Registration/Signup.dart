@@ -30,29 +30,9 @@ class _SignuppgState extends State<Signuppg> {
   TextEditingController emailController;
   TextEditingController pswdController;
 
-  bool _isLoggedIn = false;
-
   @override
-  void initState() {
-    _isLoggedIn = false;
-
-    Prefs.instance.getBooleanValue(CONST.LoggedIn).then((value) =>
-        setState(() {_isLoggedIn = value;}));
-
-    // _checkUserIsLogged();
-  }
-
-  Future<void> _checkUserIsLogged() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    _isLoggedIn = prefs.getBool(CONST.LoggedIn);
-
-    if (_isLoggedIn == false) {
-      print('signup');
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => new Signuppg()));
-    } else if (_isLoggedIn == true){
-      print('home');
-      Navigator.pushReplacement((context), MaterialPageRoute(builder: (context) => new Homepg()));
-    }
+  void dispose() {
+    super.dispose();
   }
 
   @override

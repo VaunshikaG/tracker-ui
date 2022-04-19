@@ -1,10 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tracker_ui/BLoC/Validators.dart';
 import 'package:tracker_ui/Models/Registration/SignupModel.dart';
-
+import '../Common/Constants.dart';
 import '../Screens/Home/Home.dart';
 import '../api.dart';
 
@@ -36,26 +35,32 @@ class SignupBLoC with Validators{
   Function(String) get changeSpswd => _sPswd.sink.add;
 
   //  api call
-  dynamic submit(BuildContext buildContext) async {
+  dynamic submit(BuildContext buildContext) {
     ApiService apiService = new ApiService();
 
-    final result = await apiService.Register(_fName.value, _lName.value,
-      _sEmail.value, _sPswd.value, buildContext);
-    final data = SignupModel.fromJson(jsonDecode(result)) as Map<SignupModel, dynamic>;
+    apiService.Register(_fName.value, _lName.value,
+      _sEmail.value, _sPswd.value, buildContext).then((value) async {
+      if (value != null) {
+        final prefs = await SharedPreferences.getInstance();
 
-    if (data != null) {
-      String firstName = _fName.value;
-      String lastName = _lName.value;
-      String email = _sEmail.value;
-      String password = _sPswd.value;
+        String firstName = _fName.value;
+        String lastName = _lName.value;
+        String email = _sEmail.value;
+        String password = _sPswd.value;
 
-      SignupModel signupModel = await apiService.Register(firstName,
-          lastName, email, password, buildContext);
-      _data.sink.add(signupModel);
-      // ApiService.setToken(data['token'], data['refresulthToken']);
-      Navigator.of(buildContext).pushReplacement(MaterialPageRoute(builder: (context) =>
-          Homepg()));
-    }
+        prefs.setBool(CONST.LoggedIn, true);
+        prefs.setString(CONST.email, email);
+        prefs.setString(CONST.pswd, password);
+
+        SignupModel signupModel = await apiService.Register(firstName,
+            lastName, email, password, buildContext);
+        _data.sink.add(signupModel);
+        // ApiService.setToken(data['token'], data['refreshToken']);
+        Navigator.of(buildContext).pushReplacement(
+            MaterialPageRoute(builder: (context) =>
+                Homepg()));
+      }
+    });
 
     print(_fName);
     print(_lName);

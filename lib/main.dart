@@ -12,6 +12,7 @@ import 'package:tracker_ui/BLoC/Signup_BloC.dart';
 import 'package:tracker_ui/Common/Dialog.dart';
 import 'package:tracker_ui/Common/theme.dart';
 import 'package:tracker_ui/Screens/Registration/Login.dart';
+import 'package:tracker_ui/Screens/Registration/Signup.dart';
 import 'Common/Constants.dart';
 import 'Common/Prefs.dart';
 import 'Screens/Home/Home.dart';
@@ -35,6 +36,11 @@ void main() {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: Splash(),
+        routes: {
+          '/home': (_) => Homepg(),
+          '/login': (_) => new Loginpg(),
+          '/signup': (_) => new Signuppg(),
+        },
       ),
     ),
   );

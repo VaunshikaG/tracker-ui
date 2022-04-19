@@ -27,6 +27,11 @@ class _LoginpgState extends State<Loginpg> {
   TextEditingController pswdController;
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //  calling bloc class
     final bloc = Provider.of<LoginBLoC>(context, listen: false);
@@ -219,17 +224,21 @@ class _LoginpgState extends State<Loginpg> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 0),
                                 elevation: 5,
-                                onPressed:
-                                    snapshot.hasError || !snapshot.hasData
-                                        ? null
-                                        : () async {
-                                            if (snapshot.hasData) {
-                                              bloc.submit(context);
-                                              print('login success!!');
-                                              Prefs.instance.setBooleanValue(CONST.LoggedIn, true);
-                                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Homepg()));
-                                            }
-                                          },
+                                onPressed: snapshot.hasError ||
+                                        !snapshot.hasData
+                                    ? null
+                                    : () async {
+                                        if (snapshot.hasData) {
+                                          bloc.submit(context);
+                                          print('login success!!');
+                                          Prefs.instance.setBooleanValue(
+                                              CONST.LoggedIn, true);
+                                          Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Homepg()));
+                                        }
+                                      },
                                 child: const Text(
                                   'Login',
                                   style: TextStyle(
@@ -267,7 +276,7 @@ class _LoginpgState extends State<Loginpg> {
                 const Padding(
                   padding: const EdgeInsets.only(top: 150),
                   child: Text(
-                    'Create a new.dart account',
+                    'Create a new account',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -287,6 +296,7 @@ class _LoginpgState extends State<Loginpg> {
                           horizontal: 40, vertical: 0),
                       elevation: 5,
                       onPressed: () {
+                        print('signup');
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) {
                           return Signuppg();
