@@ -7,12 +7,13 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
-import 'package:tracker_ui/BLoC/Login_BloC.dart';
-import 'package:tracker_ui/BLoC/Signup_BloC.dart';
+import 'package:tracker_ui/BLoC/Registration/Login_BloC.dart';
+import 'package:tracker_ui/BLoC/Registration/Signup_BloC.dart';
 import 'package:tracker_ui/Common/Dialog.dart';
 import 'package:tracker_ui/Common/theme.dart';
 import 'package:tracker_ui/Screens/Registration/Login.dart';
 import 'package:tracker_ui/Screens/Registration/Signup.dart';
+import 'BLoC/Category/Category_BloC.dart';
 import 'Common/Constants.dart';
 import 'Common/Prefs.dart';
 import 'Screens/Home/Home.dart';
@@ -32,6 +33,9 @@ class MyApp extends StatelessWidget {
         ),
         Provider<SignupBLoC>(
           create: (context) => SignupBLoC(),
+        ),
+        Provider<CategoryBloC>(
+          create: (context) => CategoryBloC(),
         ),
       ],
       child: MaterialApp(

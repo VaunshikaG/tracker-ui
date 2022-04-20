@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tracker_ui/Common/Constants.dart';
 import 'package:tracker_ui/Common/snackbar.dart';
 import 'package:flutter_session/flutter_session.dart';
@@ -44,7 +45,7 @@ class ApiService {
 
 
   //  register
-  Future<dynamic> Register(String firstName, String lastName, String email,
+  Future<dynamic> register(String firstName, String lastName, String email,
       String password, BuildContext buildContext) async {
     Uri url = Uri.parse(URL.app_url + URL.register_url);
 
@@ -95,10 +96,10 @@ class ApiService {
 
 
   //  login
-  Future<dynamic> Login(String email,
+  Future<dynamic> login(String email,
       String password, BuildContext buildContext) async {
+    final prefs = await SharedPreferences.getInstance();
     Uri url = Uri.parse(URL.app_url + URL.login_url);
-
 
     try {
       final response = await http.post(
@@ -106,6 +107,11 @@ class ApiService {
         headers: {
           'Content-type': 'application/json',
           'Accept': 'application/json',
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": 'true',
+          'Access-Control-Allow-Headers': 'Access-Control-Allow-Origin, Accept',
+          'Access-Control-Expose-Headers': 'Authorization, authenticated',
+          'Access-Control-Allow-Methods': 'POST,OPTIONS',
         },
         body: jsonEncode(<String, String>{
           "email": email,
@@ -114,10 +120,12 @@ class ApiService {
         }),
       );
 
-      print(jsonEncode(email).toString());
       print(response.body.toString());
 
       if (response.statusCode == 200 || response.statusCode == 400) {
+        final res = LoginModel.fromJson(jsonDecode(response.body));
+        prefs.setString(CONST.token, res.token);
+        print(res.token);
         return LoginModel.fromJson(jsonDecode(response.body));
       }
       else if (response.statusCode == 404) {

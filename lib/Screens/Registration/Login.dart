@@ -1,14 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tracker_ui/BLoC/Login_BloC.dart';
-import 'package:tracker_ui/Common/snackbar.dart';
+import 'package:tracker_ui/BLoC/Registration/Login_BloC.dart';
 import 'package:tracker_ui/Screens/Home/Home.dart';
 import 'package:tracker_ui/Screens/Registration/Signup.dart';
-import 'package:tracker_ui/api.dart';
 import '../../Common/Constants.dart';
 import '../../Common/Prefs.dart';
 import '../../Common/theme.dart';
@@ -233,6 +228,7 @@ class _LoginpgState extends State<Loginpg> {
                                           print('login success!!');
                                           Prefs.instance.setBooleanValue(
                                               CONST.LoggedIn, true);
+                                          // Prefs.instance.setStringValue(CONST.token, value)
                                           Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(
                                                   builder: (context) =>

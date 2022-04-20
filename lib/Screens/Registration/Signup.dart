@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tracker_ui/BLoC/Signup_BloC.dart';
+import 'package:tracker_ui/BLoC/Registration/Signup_BloC.dart';
 import 'package:tracker_ui/Common/Constants.dart';
 import 'package:tracker_ui/Common/Prefs.dart';
 import 'package:tracker_ui/Models/Registration/SignupModel.dart';
 import 'package:tracker_ui/Screens/Registration/Login.dart';
-import 'package:tracker_ui/api.dart';
-import '../../Common/Dialog.dart';
-import '../../Common/snackbar.dart';
 import '../../Common/theme.dart';
 import '../Home/Home.dart';
 
@@ -20,7 +16,6 @@ class Signuppg extends StatefulWidget {
 class _SignuppgState extends State<Signuppg> {
   final formKeys = GlobalKey<FormState>();
   SignupModel signupModel;
-  ApiService apiService = new ApiService();
 
   bool _isObscure1 = true;
 

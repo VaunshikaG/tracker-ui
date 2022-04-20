@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tracker_ui/BLoC/Validators.dart';
+import 'package:tracker_ui/BLoC/Registration/Validators.dart';
 import 'package:tracker_ui/Models/Registration/SignupModel.dart';
-import '../Common/Constants.dart';
-import '../Screens/Home/Home.dart';
-import '../api.dart';
+import '../../Common/Constants.dart';
+import '../../Screens/Home/Home.dart';
+import '../../Service/Registration/Registration_Apis.dart';
 
 
 final blocSignup = SignupBLoC();
@@ -38,7 +38,7 @@ class SignupBLoC with Validators{
   dynamic submit(BuildContext buildContext) {
     ApiService apiService = new ApiService();
 
-    apiService.Register(_fName.value, _lName.value,
+    apiService.register(_fName.value, _lName.value,
       _sEmail.value, _sPswd.value, buildContext).then((value) async {
       if (value != null) {
         final prefs = await SharedPreferences.getInstance();
@@ -51,8 +51,9 @@ class SignupBLoC with Validators{
         prefs.setBool(CONST.LoggedIn, true);
         prefs.setString(CONST.email, email);
         prefs.setString(CONST.pswd, password);
+        // prefs.setString(CONST.token, value)
 
-        SignupModel signupModel = await apiService.Register(firstName,
+        SignupModel signupModel = await apiService.register(firstName,
             lastName, email, password, buildContext);
         _data.sink.add(signupModel);
         // ApiService.setToken(data['token'], data['refreshToken']);
