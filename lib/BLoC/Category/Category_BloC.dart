@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tracker_ui/BLoC/Category/Validators.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:tracker_ui/Common/Constants.dart';
+import 'package:tracker_ui/Common/Prefs.dart';
 
 import '../../Models/Category/CategoryModel.dart';
 import '../../Service/Category/Category_Api.dart';
@@ -12,9 +17,11 @@ class CategoryBloC with Validators {
 
   final _data = PublishSubject();
 
+
   //  getter
   Stream<String> get title => _title.stream.transform(titleValidator);
   Stream<String> get desc => _desc.stream.transform(titleValidator);
+
   Stream<bool> get isValid => Rx.combineLatest2(title, desc, (a, b) => true);
 
 
@@ -32,12 +39,15 @@ class CategoryBloC with Validators {
 
     apiService.categories(_title.value, _desc.value, buildContext).then((value) async {
       if(value != null) {
+
         String title = _title.value;
         String desc = _desc.value;
+        Prefs.instance.getStringValue(CONST.token);
 
         CategoryModel categoryModel = await apiService.categories(title,
             desc, buildContext);
         _data.sink.add;
+        print('category added');
         Navigator.pop(buildContext);
       }
     });
@@ -46,5 +56,7 @@ class CategoryBloC with Validators {
   void dispose() {
     _title.close();
     _desc.close();
+    _data.close();
+    // _getData.close();
   }
 }

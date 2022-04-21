@@ -1,28 +1,37 @@
-class LoginModel {
-  String firstName;
-  String lastName;
-  String email;
-  String token;
+import 'dart:convert';
 
+LoginModel loginModelFromJson(String str) => LoginModel.fromJson(json.decode(str));
+
+String loginModelToJson(LoginModel data) => json.encode(data.toJson());
+
+class LoginModel {
   LoginModel({
     this.firstName,
     this.lastName,
+    this.userId,
     this.email,
-    this.token});
+    this.token,
+  });
 
-  LoginModel.fromJson(Map<String, dynamic> json) {
-    firstName = json['firstName'] == null ? null : json["firstName"];
-    lastName = json['lastName'] == null ? null : json["lastName"];
-    email = json['email'] == null ? null : json["email"];
-    token = json['token'] == null ? null : json["token"];
-  }
+  String firstName;
+  String lastName;
+  String userId;
+  String email;
+  String token;
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['email'] = this.email;
-    data['token'] = this.token;
-    return data;
-  }
+  factory LoginModel.fromJson(Map<String, dynamic> json) => LoginModel(
+    firstName: json["firstName"],
+    lastName: json["lastName"],
+    userId: json["userId"].toString(),
+    email: json["email"],
+    token: json["token"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "firstName": firstName,
+    "lastName": lastName,
+    "userId": userId,
+    "email": email,
+    "token": token,
+  };
 }

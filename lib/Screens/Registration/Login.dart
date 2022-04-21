@@ -228,7 +228,6 @@ class _LoginpgState extends State<Loginpg> {
                                           print('login success!!');
                                           Prefs.instance.setBooleanValue(
                                               CONST.LoggedIn, true);
-                                          // Prefs.instance.setStringValue(CONST.token, value)
                                           Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(
                                                   builder: (context) =>

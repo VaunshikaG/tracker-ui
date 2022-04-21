@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tracker_ui/Common/Prefs.dart';
+import 'package:tracker_ui/Common/snackbar.dart';
 import 'package:tracker_ui/Common/theme.dart';
 
 import '../../BLoC/Category/Category_BloC.dart';
+import '../../Common/Constants.dart';
+import '../../Models/Category/CategoryModel.dart';
 
 class Homepg extends StatefulWidget {
   @override
@@ -14,7 +18,6 @@ class Homepg extends StatefulWidget {
 class _HomepgState extends State<Homepg> {
   @override
   Widget build(BuildContext context) {
-
     final bloc = Provider.of<CategoryBloC>(context, listen: false);
 
     return WillPopScope(
@@ -30,8 +33,8 @@ class _HomepgState extends State<Homepg> {
           centerTitle: true,
           actions: [
             IconButton(
-              alignment: Alignment(0, 0),
-              icon: Icon(Icons.logout),
+              alignment: const Alignment(0, 0),
+              icon: const Icon(Icons.logout),
               splashColor: Colors.white,
               onPressed: () {
                 Prefs.instance.removeAll();
@@ -44,7 +47,7 @@ class _HomepgState extends State<Homepg> {
         body: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.fromLTRB(20, 0, 10, 20),
-            child: Container(
+            child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.46,
               width: MediaQuery.of(context).size.width * 0.8,
               child: Form(
@@ -55,11 +58,11 @@ class _HomepgState extends State<Homepg> {
                   // mainAxisSize: MainAxisSize.min,
                   children: [
                     // user id
-                    const SizedBox(
+                    SizedBox(
                       height: 25,
                       child: Text(
-                        'User Id :  ',
-                        style: TextStyle(
+                        'User Id : $userId',
+                        style: const TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
                         ),
@@ -69,7 +72,7 @@ class _HomepgState extends State<Homepg> {
 
                     //  category id
                     const SizedBox(
-                      height: 25,
+                      height: 27,
                       child: Text(
                         'Category Id :  ',
                         style: TextStyle(
@@ -79,8 +82,6 @@ class _HomepgState extends State<Homepg> {
                         textAlign: TextAlign.start,
                       ),
                     ),
-
-                    const SizedBox(height: 10),
 
                     //  title
                     const SizedBox(
@@ -94,61 +95,67 @@ class _HomepgState extends State<Homepg> {
                         textAlign: TextAlign.start,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 7),
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value.isEmpty || value == null) {
-                            return 'Please enter title';
-                          }
-                          return null;
-                        },
-                        autofocus: true,
-                        textInputAction: TextInputAction.newline,
-                        // minLines: 1,
-                        maxLines: 2,
-                        style: const TextStyle(fontSize: 17),
-                        controller: titleController,
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              style: BorderStyle.solid,
-                              width: 1,
-                              color: Colors.black,
+                    StreamBuilder<String>(
+                      stream: bloc.title,
+                      builder: (context, AsyncSnapshot<String> snapshot) =>
+                          Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 7),
+                        child: TextFormField(
+                          //  to set entered title
+                          onChanged: bloc.changedTitle,
+                          controller: titleController,
+                          validator: (value) {
+                            if (value.isEmpty || value == null) {
+                              return 'Please enter title';
+                            }
+                            return null;
+                          },
+                          autofocus: true,
+                          textInputAction: TextInputAction.newline,
+                          // minLines: 1,
+                          maxLines: 1,
+                          style: const TextStyle(fontSize: 17),
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              style: BorderStyle.solid,
-                              width: 1,
-                              color: Colors.black,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              style: BorderStyle.solid,
-                              width: 1,
-                              color: Colors.red,
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.red,
+                              ),
                             ),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              style: BorderStyle.solid,
-                              width: 1,
-                              color: Colors.red,
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.red,
+                              ),
                             ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
                           ),
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
 
                     //  description
                     const SizedBox(
@@ -162,57 +169,137 @@ class _HomepgState extends State<Homepg> {
                         textAlign: TextAlign.start,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 7, bottom: 0),
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value.isEmpty || value == null) {
-                            return 'Please enter description';
-                          }
-                          return null;
-                        },
-                        autofocus: true,
-                        keyboardType: TextInputType.multiline,
-                        textInputAction: TextInputAction.newline,
-                        // minLines: 1,
-                        maxLines: 5,
-                        style: const TextStyle(fontSize: 17),
-                        controller: descController,
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              style: BorderStyle.solid,
-                              width: 1,
-                              color: Colors.black,
+                    StreamBuilder(
+                      stream: bloc.desc,
+                      builder: (context, AsyncSnapshot<String> snapshot) =>
+                          Padding(
+                        padding: const EdgeInsets.only(top: 7, bottom: 0),
+                        child: TextFormField(
+                          //  to set entered desc
+                          onChanged: bloc.changedDesc,
+                          controller: descController,
+                          validator: (value) {
+                            if (value.isEmpty || value == null) {
+                              return 'Please enter description';
+                            }
+                            return null;
+                          },
+                          autofocus: true,
+                          keyboardType: TextInputType.multiline,
+                          textInputAction: TextInputAction.newline,
+                          // minLines: 1,
+                          maxLines: 3,
+                          style: const TextStyle(fontSize: 17),
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              style: BorderStyle.solid,
-                              width: 1,
-                              color: Colors.black,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              style: BorderStyle.solid,
-                              width: 1,
-                              color: Colors.red,
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.red,
+                              ),
                             ),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              style: BorderStyle.solid,
-                              width: 1,
-                              color: Colors.red,
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.red,
+                              ),
                             ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
                           ),
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    //  total expense
+                    const SizedBox(
+                      height: 25,
+                      child: Text(
+                        'Total Expense :',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    StreamBuilder<String>(
+                      stream: bloc.title,
+                      builder: (context, AsyncSnapshot<String> snapshot) =>
+                          Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 7),
+                        child: TextFormField(
+                          //  to set entered title
+                          // onChanged: bloc.changedTitle,
+                          controller: expenseController,
+                          validator: (value) {
+                            if (value.isEmpty || value == null) {
+                              return 'Please enter expense';
+                            }
+                            return null;
+                          },
+                          autofocus: true,
+                          textInputAction: TextInputAction.newline,
+                          // minLines: 1,
+                          maxLines: 1,
+                          style: const TextStyle(fontSize: 17),
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.black,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.black,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.red,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.red,
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
                         ),
                       ),
                     ),
@@ -231,7 +318,10 @@ class _HomepgState extends State<Homepg> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            onPressed: () => addcategories(),
+            onPressed: () {
+              print(userId);
+              addcategories(context);
+              },
             elevation: 10,
             backgroundColor: CustomTheme.Grey2,
             splashColor: CustomTheme.Blue3,
@@ -246,10 +336,15 @@ class _HomepgState extends State<Homepg> {
   //  add categories
   final formKeys = GlobalKey<FormState>();
 
-  TextEditingController titleController = new TextEditingController();
-  TextEditingController descController = new TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descController = TextEditingController();
+  TextEditingController expenseController = TextEditingController();
 
-  Widget addcategories() {
+  Future<String> userId = Prefs.instance.getStringValue(CONST.userId);
+  var categoryId = Prefs.instance.getIntegerValue(CONST.categoryId);
+  var totalexpense = Prefs.instance.getStringValue(CONST.totalexpense);
+
+  Widget addcategories(BuildContext context) {
     final bloc = Provider.of<CategoryBloC>(context, listen: false);
 
     showDialog(
@@ -281,7 +376,7 @@ class _HomepgState extends State<Homepg> {
                 const SizedBox(
                   height: 25,
                   child: Text(
-                    'User Id :  ',
+                    'User Id : ',
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
@@ -292,7 +387,7 @@ class _HomepgState extends State<Homepg> {
 
                 //  category id
                 const SizedBox(
-                  height: 25,
+                  height: 27,
                   child: Text(
                     'Category Id :  ',
                     style: TextStyle(
@@ -302,8 +397,6 @@ class _HomepgState extends State<Homepg> {
                     textAlign: TextAlign.start,
                   ),
                 ),
-
-                const SizedBox(height: 10),
 
                 //  title
                 const SizedBox(
@@ -334,7 +427,7 @@ class _HomepgState extends State<Homepg> {
                       autofocus: true,
                       textInputAction: TextInputAction.newline,
                       // minLines: 1,
-                      maxLines: 2,
+                      maxLines: 1,
                       style: const TextStyle(fontSize: 17),
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
@@ -369,14 +462,14 @@ class _HomepgState extends State<Homepg> {
                             color: Colors.red,
                           ),
                         ),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
                       ),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
 
                 //  description
                 const SizedBox(
@@ -408,7 +501,80 @@ class _HomepgState extends State<Homepg> {
                       keyboardType: TextInputType.multiline,
                       textInputAction: TextInputAction.newline,
                       // minLines: 1,
-                      maxLines: 5,
+                      maxLines: 3,
+                      style: const TextStyle(fontSize: 17),
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: const BorderSide(
+                            style: BorderStyle.solid,
+                            width: 1,
+                            color: Colors.black,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: const BorderSide(
+                            style: BorderStyle.solid,
+                            width: 1,
+                            color: Colors.black,
+                          ),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: const BorderSide(
+                            style: BorderStyle.solid,
+                            width: 1,
+                            color: Colors.red,
+                          ),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: const BorderSide(
+                            style: BorderStyle.solid,
+                            width: 1,
+                            color: Colors.red,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                //  totalexpense
+                const SizedBox(
+                  height: 25,
+                  child: Text(
+                    'Total Expense :',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+                /*StreamBuilder<String>(
+                  stream: bloc.title,
+                  builder: (context, AsyncSnapshot<String> snapshot) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 7),
+                    child: TextFormField(
+                      //  to set entered title
+                      // onChanged: bloc.changedTitle,
+                      controller: expenseController,
+                      validator: (value) {
+                        if (value.isEmpty || value == null) {
+                          return 'Please enter expense';
+                        }
+                        return null;
+                      },
+                      autofocus: true,
+                      textInputAction: TextInputAction.newline,
+                      // minLines: 1,
+                      maxLines: 1,
                       style: const TextStyle(fontSize: 17),
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
@@ -444,11 +610,11 @@ class _HomepgState extends State<Homepg> {
                           ),
                         ),
                         contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       ),
                     ),
                   ),
-                ),
+                ),*/
               ],
             ),
           ),
@@ -479,7 +645,6 @@ class _HomepgState extends State<Homepg> {
                   ),
                 ),
               ),
-
               StreamBuilder(
                 stream: bloc.isValid,
                 builder: (context, snapshot) => SizedBox(
@@ -492,13 +657,14 @@ class _HomepgState extends State<Homepg> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     onPressed: () {
-                      setState(() {
-                        if (formKeys.currentState.validate()) {
-                          formKeys.currentState.save();
-                          bloc.submit(context);
-                          Navigator.of(buildContext).pop(false);
-                        }
-                      });
+                      // setState(() {
+                      if (formKeys.currentState.validate()) {
+                        formKeys.currentState.save();
+                        Prefs.instance.getStringValue(CONST.token);
+                        bloc.submit(context);
+                        Navigator.of(buildContext).pop(false);
+                      }
+                      // });
                     },
                     child: const Text(
                       'Submit',
@@ -513,9 +679,10 @@ class _HomepgState extends State<Homepg> {
               ),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
         ],
       ),
     );
   }
+
 }

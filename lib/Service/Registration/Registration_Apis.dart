@@ -9,6 +9,7 @@ import 'package:tracker_ui/Common/snackbar.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:tracker_ui/Models/Registration/LoginModel.dart';
 
+import '../../Common/Prefs.dart';
 import '../../Models/Registration/SignupModel.dart';
 
 class _AuthData {
@@ -47,6 +48,7 @@ class ApiService {
   //  register
   Future<dynamic> register(String firstName, String lastName, String email,
       String password, BuildContext buildContext) async {
+    final prefs = await SharedPreferences.getInstance();
     Uri url = Uri.parse(URL.app_url + URL.register_url);
 
 
@@ -62,7 +64,7 @@ class ApiService {
           "lastName": lastName,
           "email": email,
           "password": password,
-          // "token": 'SdxIpaQp!81XS#QP5%w^cTCIV*DYr',
+          // "token": token,
         }),
       );
 
@@ -70,6 +72,9 @@ class ApiService {
       print(response.body.toString());
 
       if (response.statusCode == 200 || response.statusCode == 400) {
+        final res = SignupModel.fromJson(jsonDecode(response.body));
+        prefs.setString(CONST.token, res.token);
+        print(res.token);
         return SignupModel.fromJson(jsonDecode(response.body));
       }
       else if (response.statusCode == 404) {
@@ -124,8 +129,10 @@ class ApiService {
 
       if (response.statusCode == 200 || response.statusCode == 400) {
         final res = LoginModel.fromJson(jsonDecode(response.body));
+        Prefs.instance.setStringValue(CONST.userId, res.userId);
+        print('user_id : ${res.userId}');
         prefs.setString(CONST.token, res.token);
-        print(res.token);
+        print('token : ${res.token}');
         return LoginModel.fromJson(jsonDecode(response.body));
       }
       else if (response.statusCode == 404) {

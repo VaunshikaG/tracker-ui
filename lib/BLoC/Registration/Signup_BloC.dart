@@ -51,7 +51,7 @@ class SignupBLoC with Validators{
         prefs.setBool(CONST.LoggedIn, true);
         prefs.setString(CONST.email, email);
         prefs.setString(CONST.pswd, password);
-        // prefs.setString(CONST.token, value)
+        prefs.getString(CONST.token);
 
         SignupModel signupModel = await apiService.register(firstName,
             lastName, email, password, buildContext);
