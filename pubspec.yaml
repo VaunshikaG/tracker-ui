@@ -24,12 +24,19 @@ dependencies:
   flutter_session: ^0.1.1
   fluttertoast: ^8.0.9
   shared_preferences: any
+  syncfusion_flutter_datagrid: ^20.1.50
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^1.0.0
+
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/img/logo.PNG"
 
 flutter:
   assets:

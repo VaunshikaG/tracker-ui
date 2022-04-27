@@ -77,14 +77,8 @@ class ApiService {
         print(res.token);
         return SignupModel.fromJson(jsonDecode(response.body));
       }
-      else if (response.statusCode == 404) {
-        // not found
-        CustomSnackBar(buildContext, Text(response.body));
-      } else if (response.statusCode == 500) {
-        // server not responding.
-        CustomSnackBar(buildContext, Text(response.body));
-      } else {
-        CustomSnackBar(buildContext, Text(response.body));
+      else {
+        throw Exception('Failed to load album');
       }
 
     } on SocketException {
@@ -135,14 +129,8 @@ class ApiService {
         print('token : ${res.token}');
         return LoginModel.fromJson(jsonDecode(response.body));
       }
-      else if (response.statusCode == 404) {
-        // not found
-        CustomSnackBar(buildContext, Text(response.body));
-      } else if (response.statusCode == 500) {
-        // server not responding.
-        CustomSnackBar(buildContext, Text(response.body));
-      } else {
-        CustomSnackBar(buildContext, Text(response.body));
+      else {
+        throw Exception('Failed to load album');
       }
 
     } on SocketException {

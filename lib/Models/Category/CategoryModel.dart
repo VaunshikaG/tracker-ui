@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+
+import '../../new.dart';
+
 class CategoryModel {
   String categoryId;
   String userId;
@@ -5,19 +10,21 @@ class CategoryModel {
   String description;
   String totalexpense;
 
-  CategoryModel(
-      {this.categoryId,
-        this.userId,
-        this.title,
-        this.description,
-        this.totalexpense});
+  CategoryModel({
+    this.categoryId,
+    this.userId,
+    this.title,
+    this.description,
+    this.totalexpense,
+  });
 
   CategoryModel.fromJson(Map<String, dynamic> json) {
     categoryId = json['categoryId'].toString();
     userId = json['userId'].toString();
     title = json['title'] == null ? null : json["title"];
     description = json['description'] == null ? null : json['description'];
-    totalexpense = json['totalexpense'] == null ? null : json['totalexpense'].toString();
+    totalexpense =
+        json['totalexpense'] == null ? null : json['totalexpense'].toString();
   }
 
   Map<String, dynamic> toJson() {
