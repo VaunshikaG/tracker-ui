@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tracker_ui/BLoC/Registration/Login_BloC.dart';
-import 'package:tracker_ui/Screens/Home/Home.dart';
 import 'package:tracker_ui/Screens/Registration/Signup.dart';
 import '../../Common/Constants.dart';
 import '../../Common/Prefs.dart';
 import '../../Common/theme.dart';
+import '../Category/Category.dart';
 
 class Loginpg extends StatefulWidget {
   @override
@@ -231,7 +231,7 @@ class _LoginpgState extends State<Loginpg> {
                                           Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      Homepg()));
+                                                      Category()));
                                         }
                                       },
                                 child: const Text(

@@ -119,8 +119,6 @@ class ApiService {
         }),
       );
 
-      print(response.body.toString());
-
       if (response.statusCode == 200 || response.statusCode == 400) {
         final res = LoginModel.fromJson(jsonDecode(response.body));
         Prefs.instance.setStringValue(CONST.userId, res.userId);

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tracker_ui/BLoC/Registration/Validators.dart';
 import 'package:tracker_ui/Common/Constants.dart';
 import 'package:tracker_ui/Models/Registration/LoginModel.dart';
-import '../../Screens/Home/Home.dart';
+import '../../Screens/Category/Category.dart';
 import '../../Service/Registration/Registration_Apis.dart';
 
 
@@ -52,7 +52,7 @@ class LoginBLoC with Validators{
         _data.sink.add(loginModel);
         // ApiService.setToken(data['token'], data['refresulthToken']);
         Navigator.of(buildContext).pushReplacement(MaterialPageRoute(builder:
-        (buildContext) => Homepg()));
+        (buildContext) => Category()));
       }
 
     });

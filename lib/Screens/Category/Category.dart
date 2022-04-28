@@ -3,21 +3,21 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tracker_ui/Common/Prefs.dart';
 import 'package:tracker_ui/Common/theme.dart';
-
+import 'package:tracker_ui/Service/Category/Category_Api.dart';
 import '../../BLoC/Category/Category_BloC.dart';
 import '../../Common/Constants.dart';
 import '../../Models/Category/CategoryModel.dart';
 
-class Homepg extends StatefulWidget {
+class Category extends StatefulWidget {
   @override
-  State<Homepg> createState() => _HomepgState();
+  State<Category> createState() => _CategoryState();
 }
 
-class _HomepgState extends State<Homepg> {
+class _CategoryState extends State<Category> {
 
-  int datalength = 0;
   @override
   void initState() {
+    getData();
     bloc.getData();
     super.initState();
   }
@@ -56,194 +56,24 @@ class _HomepgState extends State<Homepg> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsets.fromLTRB(20, 15, 10, 5),
-                child: Text(
-                  '',
-                  // 'User Id :  ${category.userId}',
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.fromLTRB(20, 15, 10, 5),
+              child: Text(
+                'User Id :  $uId',
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+            ),
 
-              StreamBuilder(
-                  stream: bloc.allCategory,
-                  builder: (context, AsyncSnapshot<CategoryModel> snapshot) {
-                    // if (snapshot.connectionState == ConnectionState.waiting || snapshot.hasData == false) {
-                    //   return Center(
-                    //     child: CircularProgressIndicator(
-                    //       valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
-                    //     ),
-                    //   );
-                    // }
-                    // else
-                      if (snapshot.data == null) {
-                      return Center(
-                        child: Text("Unable to find any "
-                            "categories"),
-                      );
-                    }
-                    else if (snapshot.hasError) {
-                      return Text('There was an error : ${snapshot
-                          .error}');
-                    }
-                    else if(snapshot.hasData){
-                      List<CategoryModel> category = snapshot.data as List<CategoryModel>;
-                      return SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: SingleChildScrollView(
-                          physics: ClampingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          child: Container(
-                            // width: 2500,
-                            margin: const EdgeInsets.fromLTRB(10, 10, 10, 20),
-                            decoration: BoxDecoration(
-                              border: Border.all(),
-                            ),
-                            child: ListView.builder(
-                                itemCount: category.length,
-                                itemBuilder:
-                                    (BuildContext buildContext, int index) {
-                                  return DataTable(
-                                    headingRowColor:
-                                        MaterialStateProperty.resolveWith(
-                                            (states) => CustomTheme.Coral1),
-                                    // columnSpacing: 10.0,
-                                    // horizontalMargin: 5,
-                                    border: TableBorder.all(),
-                                    columns: const [
-                                      DataColumn(
-                                        label: Text(
-                                          'SR',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            // fontSize: 16,
-                                          ),
-                                        ),
-                                      ),
-                                      DataColumn(
-                                        label: Text(
-                                          'Title',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            // fontSize: 16,
-                                          ),
-                                        ),
-                                      ),
-                                      DataColumn(
-                                        label: Text(
-                                          'Description',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            // fontSize: 16,
-                                          ),
-                                        ),
-                                      ),
-                                      DataColumn(
-                                        label: Text(
-                                          'Total Expense',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            // fontSize: 16,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-
-                                    rows: List.generate(
-                                      category.length,
-                                      (index) => DataRow(
-                                        cells: [
-                                          DataCell(Text(category[index].categoryId)),
-                                          DataCell(Text(category[index].title)),
-                                          DataCell(Text(category[index].description)),
-                                          DataCell(Text(category[index].totalexpense)),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }
-                                /*DataTable(
-                              headingRowColor: MaterialStateProperty
-                                  .resolveWith(
-                                      (states) => CustomTheme.Coral1),
-                              // columnSpacing: 10.0,
-                              // horizontalMargin: 5,
-                              border: TableBorder.all(),
-                              columns: [
-                                DataColumn(
-                                  label: Text(
-                                    'SR',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      // fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Text(
-                                    'Title',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      // fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Text(
-                                    'Description',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      // fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Text(
-                                    'Total Expense',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      // fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-
-                              rows: List.generate(snapshot.data.length,
-                                    (index) =>
-                                  DataRow(
-                                    cells: [
-                                      DataCell(Text(_category[index].categoryId)),
-                                      DataCell(Text(_category[index].title)),
-                                      DataCell(Text(_category[index].description)),
-                                      DataCell(Text(_category[index].totalexpense)),
-                                    ],
-                                  ),
-                              ),
-                            )*/
-                                ),
-                          ),
-                        ),
-                      );
-                    }
-                    else if (!snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
-                      return Text('No Categories');
-                    }
-                    else if (snapshot.connectionState != ConnectionState.done) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    return Text('No Data');
-                  }),
-            ],
-          ),
+            SizedBox(
+              child: allcategories(),
+            ),
+          ],
         ),
         floatingActionButton: Container(
           padding: const EdgeInsets.only(top: 10),
@@ -268,6 +98,137 @@ class _HomepgState extends State<Homepg> {
       onWillPop: () => SystemNavigator.pop(),
     );
   }
+
+  int datalength = 0;
+  List<CategoryModel> data = [];
+  String uId, cId, title, description, total;
+  void getData() {
+    try {
+      ApiService apiService = new ApiService();
+      apiService.get_Allcategories().then((value) {
+        if(value != null) {
+          data = value;
+          datalength = data.length;
+          print('length = $datalength');
+          uId = data[0].userId;
+          cId = data[0].categoryId;
+          title = data[0].title;
+          description = data[0].description;
+          total = data[0].totalexpense;
+          print('title = ${data[5].title}');
+        }
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  // all categories
+  Widget allcategories() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: ClampingScrollPhysics(),
+        child: Container(
+          // width: 2000,
+          margin: const EdgeInsets.fromLTRB(10, 10, 10, 20),
+          decoration: BoxDecoration(
+            border: Border.all(),
+          ),
+          child: DataTable(
+            headingRowColor:
+            MaterialStateProperty.resolveWith((states) => CustomTheme.Coral3),
+            // columnSpacing: 10.0,
+            // horizontalMargin: 5,
+            border: TableBorder.all(),
+            columns: const [
+              DataColumn(
+                label: Text(
+                  'SR',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    // fontSize: 16,
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Title',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    // fontSize: 16,
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Description',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    // fontSize: 16,
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Total Expense',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    // fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+            rows: data.map(
+                  (person) => DataRow(
+                    cells: <DataCell>[
+                      DataCell(
+                        Text(
+                          person.categoryId,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            // fontSize: 16,
+                          ),
+                        ),
+                        onTap: () {},
+                      ),
+                      DataCell(
+                        Text(
+                          person.title,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            // fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Text(
+                          person.description,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            // fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Text(
+                          person.totalexpense,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            // fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+
 
   //  add categories
   final formKeys = GlobalKey<FormState>();
@@ -570,7 +531,7 @@ class _HomepgState extends State<Homepg> {
                   hoverColor: CustomTheme.Blue3,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
-                  onPressed: () => Navigator.of(buildContext).pop(false),
+                  onPressed: () => Navigator.of(buildContext).pop(),
                   child: const Text(
                     'Cancel',
                     style: TextStyle(

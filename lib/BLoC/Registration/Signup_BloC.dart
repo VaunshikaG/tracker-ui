@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tracker_ui/BLoC/Registration/Validators.dart';
 import 'package:tracker_ui/Models/Registration/SignupModel.dart';
 import '../../Common/Constants.dart';
-import '../../Screens/Home/Home.dart';
+import '../../Screens/Category/Category.dart';
 import '../../Service/Registration/Registration_Apis.dart';
 
 
@@ -59,7 +59,7 @@ class SignupBLoC with Validators{
         // ApiService.setToken(data['token'], data['refreshToken']);
         Navigator.of(buildContext).pushReplacement(
             MaterialPageRoute(builder: (context) =>
-                Homepg()));
+                Category()));
       }
     });
 

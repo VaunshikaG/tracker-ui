@@ -15,6 +15,8 @@ import '../../Service/Category/Category_Api.dart';
 final bloc = CategoryBloC();
 
 class CategoryBloC with Validators {
+  final ApiService apiService = new ApiService();
+
   //  stream controllers
   final _title = BehaviorSubject<String>();
   final _desc = BehaviorSubject<String>();
@@ -30,21 +32,26 @@ class CategoryBloC with Validators {
 
 
   //  get call
-  final _getData = PublishSubject<CategoryModel>();
-  Stream<CategoryModel> get allCategory => _getData.stream;
+  int datalength = 0;
+  List<CategoryModel> data = [];
+  final _getData = PublishSubject();
 
   dynamic getData() async {
-    ApiService apiService = new ApiService();
-    CategoryModel categoryModel = await apiService.get_Allcategories();
-    _getData.sink.add(categoryModel);
+    apiService.get_Allcategories().then((value) {
+      if(value != null) {
+        data = value;
+        datalength = data.length;
+        print('length = $datalength');
+        print(data[0].userId);
+        _getData.sink.add(data);
+      }
+    });
   }
 
 
   //  post call
   final _data = PublishSubject();
   dynamic submit(BuildContext buildContext) {
-    ApiService apiService = new ApiService();
-
     apiService.categories(_title.value, _desc.value, buildContext).then((value) async {
       if(value != null) {
 

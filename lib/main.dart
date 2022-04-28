@@ -1,22 +1,17 @@
 import 'dart:async';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash_screen_view/SplashScreenView.dart';
 import 'package:tracker_ui/BLoC/Registration/Login_BloC.dart';
 import 'package:tracker_ui/BLoC/Registration/Signup_BloC.dart';
-import 'package:tracker_ui/Common/Dialog.dart';
 import 'package:tracker_ui/Common/theme.dart';
 import 'package:tracker_ui/Screens/Registration/Login.dart';
 import 'package:tracker_ui/Screens/Registration/Signup.dart';
 import 'BLoC/Category/Category_BloC.dart';
 import 'Common/Constants.dart';
 import 'Common/Prefs.dart';
-import 'Screens/Home/Home.dart';
+import 'Screens/Category/Category.dart';
 
 void main() {
   runApp(MyApp());
@@ -48,7 +43,7 @@ class MyApp extends StatelessWidget {
         home: Splash(),
         routes: {
           '/myapp': (_) => MyApp(),
-          '/home': (_) => Homepg(),
+          '/home': (_) => Category(),
           '/login': (_) => new Loginpg(),
           '/signup': (_) => new Signuppg(),
         },
@@ -109,7 +104,7 @@ class _SplashState extends State<Splash> {
 
     if (_isLoggedIn){
       print('home');
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Homepg()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Category()));
     } else if (!_isLoggedIn) {
       print('login');
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Loginpg()));

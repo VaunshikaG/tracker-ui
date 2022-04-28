@@ -6,7 +6,7 @@ import 'package:tracker_ui/Common/Prefs.dart';
 import 'package:tracker_ui/Models/Registration/SignupModel.dart';
 import 'package:tracker_ui/Screens/Registration/Login.dart';
 import '../../Common/theme.dart';
-import '../Home/Home.dart';
+import '../Category/Category.dart';
 
 class Signuppg extends StatefulWidget {
   @override
@@ -305,7 +305,7 @@ class _SignuppgState extends State<Signuppg> {
                                     bloc.submit(context);
                                     print('register success!!');
                                     Prefs.instance.setBooleanValue(CONST.LoggedIn, true);
-                                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Homepg()));
+                                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Category()));
                                   }
                                 },
                                 child: const Text(
