@@ -48,6 +48,21 @@ class CategoryBloC with Validators {
     });
   }
 
+  RequestModel requestModel;
+  dynamic getCategory() async {
+    final prefs = await SharedPreferences.getInstance();
+    apiService..get_CategoryByID().then((value) {
+      if(value != null) {
+        data = value as List<CategoryModel>;
+        datalength = data.length;
+        print(data[0].categoryId);
+        print('length = $datalength');
+        int id = Prefs.instance.setIntegerValue(CONST.categoryId, data[0].categoryId);
+        print('Cid = $id');
+        _getData.sink.add(data);
+      }
+    });
+  }
 
   //  post call
   final _data = PublishSubject();
@@ -63,7 +78,6 @@ class CategoryBloC with Validators {
             desc, buildContext);
         _data.sink.add;
         print('category added');
-        Navigator.pop(buildContext);
       }
     });
   }
@@ -72,6 +86,6 @@ class CategoryBloC with Validators {
     _title.close();
     _desc.close();
     _data.close();
-    _getData.close();
+    // _getData.close();
   }
 }

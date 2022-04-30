@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tracker_ui/Common/Prefs.dart';
 import 'package:tracker_ui/Common/theme.dart';
 import 'package:tracker_ui/Service/Category/Category_Api.dart';
+
 import '../../BLoC/Category/Category_BloC.dart';
 import '../../Common/Constants.dart';
 import '../../Models/Category/CategoryModel.dart';
+import 'Category_Details.dart';
 
 class Category extends StatefulWidget {
   @override
@@ -14,10 +17,10 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
-
   @override
   void initState() {
     getData();
+    setName();
     bloc.getData();
     super.initState();
   }
@@ -69,7 +72,6 @@ class _CategoryState extends State<Category> {
                 ),
               ),
             ),
-
             SizedBox(
               child: allcategories(),
             ),
@@ -101,21 +103,29 @@ class _CategoryState extends State<Category> {
 
   int datalength = 0;
   List<CategoryModel> data = [];
-  String uId, cId, title, description, total;
+  var uId, cId, title, description, total;
+
+  Future<void> setName() async {
+    final prefs = await SharedPreferences.getInstance();
+    cId = prefs.getString(CONST.categoryId) ?? "";
+    print('cID = $cId');
+  }
   void getData() {
     try {
       ApiService apiService = new ApiService();
       apiService.get_Allcategories().then((value) {
-        if(value != null) {
+        if (value != null) {
           data = value;
           datalength = data.length;
           print('length = $datalength');
           uId = data[0].userId;
           cId = data[0].categoryId;
+          // String category = Prefs.instance.setStringValue(CONST.categoryId, data[0].categoryId);
+          // print('cID = $category');
           title = data[0].title;
           description = data[0].description;
           total = data[0].totalexpense;
-          print('title = ${data[5].title}');
+          print('title = ${data[0].title}');
         }
       });
     } catch (e) {
@@ -137,11 +147,23 @@ class _CategoryState extends State<Category> {
             border: Border.all(),
           ),
           child: DataTable(
-            headingRowColor:
-            MaterialStateProperty.resolveWith((states) => CustomTheme.Coral3),
+            headingRowColor: MaterialStateProperty.resolveWith(
+                (states) => CustomTheme.Blue3),
             // columnSpacing: 10.0,
             // horizontalMargin: 5,
-            border: TableBorder.all(),
+            border: TableBorder.all(width: 0.5),
+            headingTextStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.black,
+              fontFamily: 'Nunito',
+            ),
+            dataTextStyle: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+              color: Colors.black,
+              fontFamily: 'Nunito',
+            ),
             columns: const [
               DataColumn(
                 label: Text(
@@ -180,55 +202,41 @@ class _CategoryState extends State<Category> {
                 ),
               ),
             ],
-            rows: data.map(
-                  (person) => DataRow(
-                    cells: <DataCell>[
-                      DataCell(
-                        Text(
-                          person.categoryId,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            // fontSize: 16,
-                          ),
+            rows: data
+                .map((person) => DataRow(
+                      cells: <DataCell>[
+                        DataCell(
+                          Text(person.categoryId.toString()),
+                          onTap: () => Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => CategoryDetails())),
                         ),
-                        onTap: () {},
-                      ),
-                      DataCell(
-                        Text(
-                          person.title,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            // fontSize: 16,
-                          ),
+                        DataCell(
+                          Text(person.title),
+                          onTap: () => Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => CategoryDetails())),
                         ),
-                      ),
-                      DataCell(
-                        Text(
-                          person.description,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            // fontSize: 16,
-                          ),
+                        DataCell(
+                          Text(person.description),
+                          onTap: () => Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => CategoryDetails())),
                         ),
-                      ),
-                      DataCell(
-                        Text(
-                          person.totalexpense,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            // fontSize: 16,
-                          ),
+                        DataCell(
+                          Text(person.totalexpense),
+                          onTap: () => Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => CategoryDetails())),
                         ),
-                      ),
-                    ],
-                  )).toList(),
+                      ],
+                    ))
+                .toList(),
           ),
         ),
       ),
     );
   }
-
-
 
   //  add categories
   final formKeys = GlobalKey<FormState>();
@@ -237,9 +245,8 @@ class _CategoryState extends State<Category> {
   TextEditingController descController = TextEditingController();
   TextEditingController expenseController = TextEditingController();
 
-  Future<String> userId = Prefs.instance.getStringValue(CONST.userId);
-  var categoryId = Prefs.instance.getIntegerValue(CONST.categoryId);
-  var totalexpense = Prefs.instance.getStringValue(CONST.totalexpense);
+  var userId = Prefs.instance.getStringValue(CONST.userId);
+  var categoryId = Prefs.instance.getStringValue(CONST.categoryId);
 
   Widget addcategories(BuildContext context) {
     final bloc = Provider.of<CategoryBloC>(context, listen: false);

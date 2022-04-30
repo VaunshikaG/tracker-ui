@@ -1,5 +1,11 @@
+import 'dart:convert';
+
+List<CategoryModel> categoryModelFromJson(String str) => List<CategoryModel>.from(json.decode(str).map((x) => CategoryModel.fromJson(x)));
+
+String categoryModelToJson(List<CategoryModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
 class CategoryModel {
-  String categoryId;
+  int categoryId;
   String userId;
   String title;
   String description;
@@ -13,22 +19,25 @@ class CategoryModel {
     this.totalexpense,
   });
 
-  CategoryModel.fromJson(Map<String, dynamic> json) {
-    categoryId = json['categoryId'].toString();
-    userId = json['userId'].toString();
-    title = json['title'] == null ? null : json["title"];
-    description = json['description'] == null ? null : json['description'];
-    totalexpense =
-        json['totalexpense'] == null ? null : json['totalexpense'].toString();
-  }
+  factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
+    userId: json["userId"].toString(),
+    categoryId: json["categoryId"],
+    title: json["title"],
+    description: json["description"],
+    totalexpense: json["totalexpense"].toString(),
+  );
 
+  Map<String, dynamic> toJson() => {
+    "userId": userId,
+    "categoryId": categoryId,
+    "title": title,
+    "description": description,
+    "totalexpense": totalexpense,
+  };
+}
+class RequestModel {
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['categoryId'] = this.categoryId;
-    data['userId'] = this.userId;
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['totalexpense'] = this.totalexpense;
-    return data;
+    Map<String, dynamic> map = {};
+    return map;
   }
 }

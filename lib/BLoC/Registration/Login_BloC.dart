@@ -51,8 +51,7 @@ class LoginBLoC with Validators{
         LoginModel loginModel = await apiService.login(email, password, buildContext);
         _data.sink.add(loginModel);
         // ApiService.setToken(data['token'], data['refresulthToken']);
-        Navigator.of(buildContext).pushReplacement(MaterialPageRoute(builder:
-        (buildContext) => Category()));
+        // Navigator.of(buildContext).pushReplacement(MaterialPageRoute(builder: (buildContext) => Category()));
       }
 
     });
