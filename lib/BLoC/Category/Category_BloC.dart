@@ -10,9 +10,10 @@ import 'package:rxdart/rxdart.dart';
 import 'package:tracker_ui/Common/Constants.dart';
 import 'package:tracker_ui/Common/Prefs.dart';
 import '../../Models/Category/CategoryModel.dart';
+import '../../Models/Category/Model2.dart';
 import '../../Service/Category/Category_Api.dart';
 
-final bloc = CategoryBloC();
+final catbloc = CategoryBloC();
 
 class CategoryBloC with Validators {
   final ApiService apiService = new ApiService();
@@ -32,36 +33,12 @@ class CategoryBloC with Validators {
 
 
   //  get call
-  int datalength = 0;
-  List<CategoryModel> data = [];
-  final _getData = PublishSubject();
-
-  dynamic getData() async {
-    apiService.get_Allcategories().then((value) {
-      if(value != null) {
-        data = value;
-        datalength = data.length;
-        print('length = $datalength');
-        print(data[0].userId);
-        _getData.sink.add(data);
-      }
-    });
+  Stream<List<CategoryModel>> get usersList async* {
+    yield await apiService.get_Allcategories();
   }
 
-  RequestModel requestModel;
-  dynamic getCategory() async {
-    final prefs = await SharedPreferences.getInstance();
-    apiService..get_CategoryByID().then((value) {
-      if(value != null) {
-        data = value as List<CategoryModel>;
-        datalength = data.length;
-        print(data[0].categoryId);
-        print('length = $datalength');
-        int id = Prefs.instance.setIntegerValue(CONST.categoryId, data[0].categoryId);
-        print('Cid = $id');
-        _getData.sink.add(data);
-      }
-    });
+  Stream<List<Model2>> get catList async* {
+    yield await apiService.get_CategoryByID();
   }
 
   //  post call
@@ -86,6 +63,5 @@ class CategoryBloC with Validators {
     _title.close();
     _desc.close();
     _data.close();
-    // _getData.close();
   }
 }

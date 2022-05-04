@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tracker_ui/Common/Prefs.dart';
-
+import 'dart:convert' as convert;
 import '../../Common/Constants.dart';
 import '../../Models/Category/CategoryModel.dart';
 import '../../Models/Category/Model2.dart';
@@ -64,8 +62,9 @@ class ApiService {
       });
 
       if (response.statusCode == 200 || response.statusCode == 400) {
-        List<CategoryModel> categoryModelFromJson(String str) => List<CategoryModel>.from(json.decode(str).map((x) => CategoryModel.fromJson(x)));
-        var body = categoryModelFromJson(response.body);
+        List<CategoryModel> categoryModelFromJson(String str) =>
+            List<CategoryModel>.from(json.decode(str).map((x) => CategoryModel.fromJson(x)));
+        var body = categoryModelFromJson(response.body);;
         return body;
       } else {
         ScaffoldMessenger(child: Text(response.statusCode.toString()));
@@ -76,27 +75,32 @@ class ApiService {
     }
   }
 
-  Future<CategoryModel> get_CategoryByID() async {
+  Future<List<Model2>> get_CategoryByID() async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString(CONST.token) ?? "";
     String id = prefs.getString(CONST.categoryId);
     print(id);
     Uri url = Uri.parse(URL.app_url + URL.categories_url + "$id");
 
+    List collection;
+    List<Model2> _user;
+
     try {
       final response = await http.get(url, headers: {
         'Authorization': 'JWT $token',
       });
       if (response.statusCode == 200 || response.statusCode == 400) {
-        var responseData = json.decode(response.body);
-        var user = CategoryModel.fromJson(responseData);
-        Prefs.instance.setIntegerValue(CONST.userId, user.categoryId);
-        print(user.categoryId);
-        return user;
+        // List<Model2> model2FromJson(String str) => List<Model2>.from(json.decode(str).map((x) => Model2.fromJson(x)));
+        // var body = model2FromJson(response.body);
+        // return body;
+
+        collection = convert.jsonDecode(response.body);
+        _user = collection.map((json) => Model2.fromJson(json)).toList();
       } else {
         ScaffoldMessenger(child: Text(response.statusCode.toString()));
         // throw Exception('Failed to load album');
       }
+      return _user;
     } catch(e) {
       print(e);
       throw e;

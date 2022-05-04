@@ -121,7 +121,7 @@ class ApiService {
 
       if (response.statusCode == 200 || response.statusCode == 400) {
         final res = LoginModel.fromJson(jsonDecode(response.body));
-        Prefs.instance.setStringValue(CONST.userId, res.userId);
+        prefs.setString(CONST.userId, res.userId);
         print('user_id : ${res.userId}');
         prefs.setString(CONST.token, res.token);
         print('token : ${res.token}');

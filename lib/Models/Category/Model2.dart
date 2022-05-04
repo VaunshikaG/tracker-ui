@@ -4,9 +4,9 @@
 
 import 'dart:convert';
 
-Model2 model2FromJson(String str) => Model2.fromJson(json.decode(str));
+List<Model2> model2FromJson(String str) => List<Model2>.from(json.decode(str).map((x) => Model2.fromJson(x)));
 
-String model2ToJson(Model2 data) => json.encode(data.toJson());
+String model2ToJson(List<Model2> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Model2 {
   Model2({
@@ -23,7 +23,24 @@ class Model2 {
   String description;
   String totalexpense;
 
-  factory Model2.fromJson(Map<String, dynamic> json) => Model2(
+  Model2.fromJson(Map<String, dynamic> json) {
+    userId = json['userId'].toString();
+    categoryId = json['categoryId'].toString();
+    title = json['title'];
+    description = json['description'];
+    totalexpense = json['totalexpense'].toString();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['userId'] = this.userId;
+    data['categoryId'] = this.categoryId;
+    data['title'] = this.title;
+    data['description'] = this.description;
+    data['totalexpense'] = this.totalexpense;
+    return data;
+  }
+/*  factory Model2.fromJson(Map<String, dynamic> json) => Model2(
     userId: json["userId"].toString(),
     categoryId: json["categoryId"].toString(),
     title: json["title"],
@@ -37,5 +54,5 @@ class Model2 {
     "title": title,
     "description": description,
     "totalexpense": totalexpense,
-  };
+  };*/
 }

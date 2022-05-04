@@ -5,7 +5,7 @@ List<CategoryModel> categoryModelFromJson(String str) => List<CategoryModel>.fro
 String categoryModelToJson(List<CategoryModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class CategoryModel {
-  int categoryId;
+  String categoryId;
   String userId;
   String title;
   String description;
@@ -21,7 +21,7 @@ class CategoryModel {
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
     userId: json["userId"].toString(),
-    categoryId: json["categoryId"],
+    categoryId: json["categoryId"].toString(),
     title: json["title"],
     description: json["description"],
     totalexpense: json["totalexpense"].toString(),

@@ -17,236 +17,12 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
-  @override
-  void initState() {
-    getData();
-    setName();
-    bloc.getData();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bloc = Provider.of<CategoryBloC>(context, listen: false);
-
-    return WillPopScope(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: CustomTheme.Grey2,
-          title: const Text(
-            'CATEGORY',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              alignment: const Alignment(0, 0),
-              icon: const Icon(Icons.logout),
-              splashColor: Colors.white,
-              onPressed: () {
-                Prefs.instance.removeAll();
-                print("user logged out");
-                Navigator.popAndPushNamed(context, '/myapp');
-              },
-            ),
-          ],
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.fromLTRB(20, 15, 10, 5),
-              child: Text(
-                'User Id :  $uId',
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(
-              child: allcategories(),
-            ),
-          ],
-        ),
-        floatingActionButton: Container(
-          padding: const EdgeInsets.only(top: 10),
-          child: FloatingActionButton(
-            child: const Text(
-              "+ Add",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onPressed: () {
-              print(userId);
-              addcategories(context);
-            },
-            elevation: 10,
-            backgroundColor: CustomTheme.Grey2,
-            splashColor: CustomTheme.Blue3,
-            hoverColor: CustomTheme.Blue3,
-          ),
-        ),
-      ),
-      onWillPop: () => SystemNavigator.pop(),
-    );
-  }
-
-  int datalength = 0;
-  List<CategoryModel> data = [];
-  var uId, cId, title, description, total;
-
-  Future<void> setName() async {
-    final prefs = await SharedPreferences.getInstance();
-    cId = prefs.getString(CONST.categoryId) ?? "";
-    print('cID = $cId');
-  }
-  void getData() {
-    try {
-      ApiService apiService = new ApiService();
-      apiService.get_Allcategories().then((value) {
-        if (value != null) {
-          data = value;
-          datalength = data.length;
-          print('length = $datalength');
-          uId = data[0].userId;
-          cId = data[0].categoryId;
-          // String category = Prefs.instance.setStringValue(CONST.categoryId, data[0].categoryId);
-          // print('cID = $category');
-          title = data[0].title;
-          description = data[0].description;
-          total = data[0].totalexpense;
-          print('title = ${data[0].title}');
-        }
-      });
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  // all categories
-  Widget allcategories() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        physics: ClampingScrollPhysics(),
-        child: Container(
-          // width: 2000,
-          margin: const EdgeInsets.fromLTRB(10, 10, 10, 20),
-          decoration: BoxDecoration(
-            border: Border.all(),
-          ),
-          child: DataTable(
-            headingRowColor: MaterialStateProperty.resolveWith(
-                (states) => CustomTheme.Blue3),
-            // columnSpacing: 10.0,
-            // horizontalMargin: 5,
-            border: TableBorder.all(width: 0.5),
-            headingTextStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.black,
-              fontFamily: 'Nunito',
-            ),
-            dataTextStyle: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 15,
-              color: Colors.black,
-              fontFamily: 'Nunito',
-            ),
-            columns: const [
-              DataColumn(
-                label: Text(
-                  'SR',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    // fontSize: 16,
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Title',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    // fontSize: 16,
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Description',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    // fontSize: 16,
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Total Expense',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    // fontSize: 16,
-                  ),
-                ),
-              ),
-            ],
-            rows: data
-                .map((person) => DataRow(
-                      cells: <DataCell>[
-                        DataCell(
-                          Text(person.categoryId.toString()),
-                          onTap: () => Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => CategoryDetails())),
-                        ),
-                        DataCell(
-                          Text(person.title),
-                          onTap: () => Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => CategoryDetails())),
-                        ),
-                        DataCell(
-                          Text(person.description),
-                          onTap: () => Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => CategoryDetails())),
-                        ),
-                        DataCell(
-                          Text(person.totalexpense),
-                          onTap: () => Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => CategoryDetails())),
-                        ),
-                      ],
-                    ))
-                .toList(),
-          ),
-        ),
-      ),
-    );
-  }
-
   //  add categories
   final formKeys = GlobalKey<FormState>();
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descController = TextEditingController();
   TextEditingController expenseController = TextEditingController();
-
-  var userId = Prefs.instance.getStringValue(CONST.userId);
-  var categoryId = Prefs.instance.getStringValue(CONST.categoryId);
 
   Widget addcategories(BuildContext context) {
     final bloc = Provider.of<CategoryBloC>(context, listen: false);
@@ -586,6 +362,146 @@ class _CategoryState extends State<Category> {
           const SizedBox(height: 10),
         ],
       ),
+    );
+  }
+
+  @override
+  void initState() {
+    setNames();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  var _uID;
+  Future<void> setNames() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var uID = await prefs.getString(CONST.userId);
+    setState(() => _uID = uID);
+    print('user = $_uID');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final catbloc = Provider.of<CategoryBloC>(context, listen: false);
+
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: CustomTheme.Grey2,
+          title: const Text(
+            'CATEGORY',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              alignment: const Alignment(0, 0),
+              icon: const Icon(Icons.logout),
+              splashColor: Colors.white,
+              onPressed: () {
+                Prefs.instance.removeAll();
+                print("user logged out");
+                Navigator.popAndPushNamed(context, '/myapp');
+              },
+            ),
+          ],
+        ),
+        body: StreamBuilder(
+          stream: catbloc.usersList,
+          builder: (context, snapshot) {
+            if (snapshot.hasError)
+              return Text('There was an error : ${snapshot.error}');
+            List<CategoryModel> users = snapshot.data;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(20, 15, 10, 5),
+                  child: Text(
+                    'User Id :  ${_uID}',
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: users?.length ?? 0,
+                    itemBuilder: (BuildContext context, int index) {
+                      CategoryModel _user = users[index];
+                      return GestureDetector(
+                        onTap: () async {
+                          final prefs = await SharedPreferences.getInstance();
+                          var catID = prefs.setString(CONST.categoryId, _user.categoryId);
+                          print('cid = $catID');
+                          _user.categoryId;
+                          Navigator.of(context).push(MaterialPageRoute
+                            (builder: (context) => CategoryDetails()));
+                        },
+                        child: ListTile(
+                          leading: Text(
+                            _user.categoryId,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          title: Text(
+                            _user.title,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            _user.description,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          trailing: Text(
+                            _user.totalexpense,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) => Divider(),
+                  ),
+                ),
+              ],
+            );
+            },
+        ),
+
+        floatingActionButton: Container(
+          padding: const EdgeInsets.only(top: 10),
+          child: FloatingActionButton(
+            child: const Text(
+              "+ Add",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onPressed: () {
+              addcategories(context);
+            },
+            elevation: 10,
+            backgroundColor: CustomTheme.Grey2,
+            splashColor: CustomTheme.Blue3,
+            hoverColor: CustomTheme.Blue3,
+          ),
+        ),
+      ),
+      onWillPop: () => SystemNavigator.pop(),
     );
   }
 }

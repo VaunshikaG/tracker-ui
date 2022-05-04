@@ -1,62 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tracker_ui/Common/Constants.dart';
-import 'package:tracker_ui/Common/Prefs.dart';
+import 'package:tracker_ui/Models/Category/CategoryModel.dart';
 import 'package:tracker_ui/Models/Category/Model2.dart';
-
 import '../../BLoC/Category/Category_BloC.dart';
 import '../../Common/theme.dart';
-import '../../Models/Category/CategoryModel.dart';
 import '../../Service/Category/Category_Api.dart';
 import 'Category.dart';
 
 class CategoryDetails extends StatefulWidget {
-
   @override
   State<CategoryDetails> createState() => _CategoryDetailsState();
 }
 
 class _CategoryDetailsState extends State<CategoryDetails> {
-
   @override
   void initState() {
-    getData();
-    // bloc.getCategory();
     super.initState();
   }
 
   @override
   void dispose() {
-    // bloc.dispose();
     super.dispose();
-  }
-
-  var datalength = 0;
-  List<CategoryModel> data = [];
-  var cId, title, description, total;
-
-  void getData() {
-    try {
-      ApiService apiService = new ApiService();
-      apiService.get_CategoryByID().then((value) {
-        if(value != null) {
-          cId = data[0].categoryId;
-          title = data[0].title;
-          description = data[0].description;
-          total = data[0].totalexpense;
-          print('title = $title');
-          print('title = ${data[0].title}');
-        }
-      });
-    } catch (e) {
-      throw e;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<CategoryBloC>(context, listen: false);
+    final catbloc = Provider.of<CategoryBloC>(context, listen: false);
 
     return WillPopScope(
       child: Scaffold(
@@ -71,61 +41,80 @@ class _CategoryDetailsState extends State<CategoryDetails> {
           centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Category())),
+            onPressed: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Category())),
           ),
         ),
-        body: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 30,
-                  child: Text(
-                    'Category Id :  $cId',
-                    style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
+        body: StreamBuilder(
+          stream: catbloc.catList,
+          builder: (context, snapshot) {
+            if (snapshot.hasError)
+              return Text('There was an error : ${snapshot.error}');
+            List<Model2> users = snapshot.data;
+
+            return ListView.separated(
+              itemCount: users?.length ?? 0,
+              itemBuilder: (BuildContext context, int index) {
+                Model2 _user = users[index];
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: Text(
+                        'ID :   ${_user.categoryId}',
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(
-                  height: 30,
-                  child: Text(
-                    'Title :  $title',
-                    style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: Text(
+                        'Title :    ${_user.title}',
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(
-                  height: 30,
-                  child: Text(
-                    'Description :  $description',
-                    style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: Text(
+                        'Description :    ${_user.description}',
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(
-                  height: 30,
-                  child: Text(
-                    'Total Expense :  $total',
-                    style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: Text(
+                        'Total Expense :    ${_user.totalexpense}',
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ],
-            ),
+                  ],
+                );
+              },
+              separatorBuilder: (context, index) => Divider(),
+            );
+          },
         ),
       ),
       onWillPop: () => Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) {return Category();})),
+          MaterialPageRoute(builder: (context) {
+        return Category();
+      })),
     );
   }
 }
