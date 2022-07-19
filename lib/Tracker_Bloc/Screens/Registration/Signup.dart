@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tracker_ui/BLoC/Registration/Signup_BloC.dart';
-import 'package:tracker_ui/Common/Constants.dart';
-import 'package:tracker_ui/Common/Prefs.dart';
-import 'package:tracker_ui/Models/Registration/SignupModel.dart';
-import 'package:tracker_ui/Screens/Registration/Login.dart';
+import 'package:tracker_ui/Tracker_Bloc/BLoC/Registration/Signup_BloC.dart';
+import 'package:tracker_ui/Tracker_Bloc/Common/Constants.dart';
+import 'package:tracker_ui/Tracker_Bloc/Common/Prefs.dart';
+import 'package:tracker_ui/Tracker_Bloc/Models/Registration/SignupModel.dart';
+import 'package:tracker_ui/Tracker_Bloc/Screens/Registration/Login.dart';
 import '../../Common/theme.dart';
 import '../Category/Category.dart';
 

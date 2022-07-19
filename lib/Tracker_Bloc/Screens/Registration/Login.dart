@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:tracker_ui/BLoC/Registration/Login_BloC.dart';
-import 'package:tracker_ui/Screens/Registration/Signup.dart';
+import 'package:tracker_ui/Tracker_Bloc/BLoC/Registration/Login_BloC.dart';
+import 'package:tracker_ui/Tracker_Bloc/Screens/Registration/Signup.dart';
 import '../../Common/Constants.dart';
 import '../../Common/Prefs.dart';
 import '../../Common/theme.dart';
@@ -17,9 +17,6 @@ class _LoginpgState extends State<Loginpg> {
   final formKeys = GlobalKey<FormState>();
 
   bool _isObscure = true;
-
-  TextEditingController emailController;
-  TextEditingController pswdController;
 
   @override
   void dispose() {
@@ -91,7 +88,6 @@ class _LoginpgState extends State<Loginpg> {
                             child: TextFormField(
                               //  to set entered email
                               onChanged: bloc.changeLemail,
-                              controller: emailController,
                               keyboardType: TextInputType.emailAddress,
                               cursorColor: CustomTheme.Blue1,
                               style: const TextStyle(
@@ -147,7 +143,6 @@ class _LoginpgState extends State<Loginpg> {
                             child: TextFormField(
                               //  to set entered pswd
                               onChanged: bloc.changeLpswd,
-                              controller: pswdController,
                               obscureText: _isObscure,
                               keyboardType: TextInputType.visiblePassword,
                               cursorColor: CustomTheme.Blue1,

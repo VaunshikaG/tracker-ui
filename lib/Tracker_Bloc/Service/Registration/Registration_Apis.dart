@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tracker_ui/Common/Constants.dart';
-import 'package:tracker_ui/Common/snackbar.dart';
 import 'package:flutter_session/flutter_session.dart';
-import 'package:tracker_ui/Models/Registration/LoginModel.dart';
 
+import '../../Common/Constants.dart';
 import '../../Common/Prefs.dart';
+import '../../Models/Registration/LoginModel.dart';
 import '../../Models/Registration/SignupModel.dart';
 
 class _AuthData {

@@ -3,15 +3,15 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tracker_ui/BLoC/Registration/Login_BloC.dart';
-import 'package:tracker_ui/BLoC/Registration/Signup_BloC.dart';
-import 'package:tracker_ui/Common/theme.dart';
-import 'package:tracker_ui/Screens/Registration/Login.dart';
-import 'package:tracker_ui/Screens/Registration/Signup.dart';
 import 'BLoC/Category/Category_BloC.dart';
+import 'BLoC/Registration/Login_BloC.dart';
+import 'BLoC/Registration/Signup_BloC.dart';
 import 'Common/Constants.dart';
 import 'Common/Prefs.dart';
+import 'Common/theme.dart';
 import 'Screens/Category/Category.dart';
+import 'Screens/Registration/Login.dart';
+import 'Screens/Registration/Signup.dart';
 
 void main() {
   runApp(MyApp());

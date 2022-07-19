@@ -1,5 +1,5 @@
 name: tracker_ui
-description: A new.dart Flutter project.
+description: A E_main.dart Flutter project.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -24,6 +24,8 @@ dependencies:
   flutter_session: ^0.1.1
   fluttertoast: ^8.0.9
   shared_preferences: any
+  rounded_modal: ^1.0.1
+  progress_dialog: ^1.2.4
 
 dev_dependencies:
   flutter_test:

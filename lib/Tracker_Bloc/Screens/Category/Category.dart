@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tracker_ui/Common/Prefs.dart';
-import 'package:tracker_ui/Common/theme.dart';
-import 'package:tracker_ui/Service/Category/Category_Api.dart';
 
 import '../../BLoC/Category/Category_BloC.dart';
 import '../../Common/Constants.dart';
+import '../../Common/Prefs.dart';
+import '../../Common/theme.dart';
 import '../../Models/Category/CategoryModel.dart';
 import 'Category_Details.dart';
 

@@ -2,10 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tracker_ui/BLoC/Registration/Validators.dart';
-import 'package:tracker_ui/Common/Constants.dart';
-import 'package:tracker_ui/Models/Registration/LoginModel.dart';
-import '../../Screens/Category/Category.dart';
+import 'package:tracker_ui/Tracker_Bloc/BLoC/Registration/Validators.dart';
+import 'package:tracker_ui/Tracker_Bloc/Common/Constants.dart';
+import 'package:tracker_ui/Tracker_Bloc/Models/Registration/LoginModel.dart';
 import '../../Service/Registration/Registration_Apis.dart';
 
 

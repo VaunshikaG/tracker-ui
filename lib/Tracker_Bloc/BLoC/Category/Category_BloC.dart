@@ -5,10 +5,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tracker_ui/BLoC/Category/Validators.dart';
+import 'package:tracker_ui/Tracker_Bloc/BLoC/Category/Validators.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tracker_ui/Common/Constants.dart';
-import 'package:tracker_ui/Common/Prefs.dart';
+import 'package:tracker_ui/Tracker_Bloc/Common/Constants.dart';
+import 'package:tracker_ui/Tracker_Bloc/Common/Prefs.dart';
 import '../../Models/Category/CategoryModel.dart';
 import '../../Models/Category/Model2.dart';
 import '../../Service/Category/Category_Api.dart';
@@ -41,7 +41,7 @@ class CategoryBloC with Validators {
     yield await apiService.get_CategoryByID();
   }
 
-  //  post call
+  //  add category - post call
   final _data = PublishSubject();
   dynamic submit(BuildContext buildContext) {
     apiService.categories(_title.value, _desc.value, buildContext).then((value) async {
@@ -57,6 +57,13 @@ class CategoryBloC with Validators {
         print('category added');
       }
     });
+  }
+
+  //  update - post call
+  final _update = PublishSubject();
+  void update() {
+    print(_title.value);
+    print(_desc.value);
   }
 
   void dispose() {
