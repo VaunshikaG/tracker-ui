@@ -6,22 +6,27 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
 import '../../Common/Constants.dart';
-import '../../Models/Category/AddPodo.dart';
-import '../../Models/Category/AllCategoriesPodo.dart';
+import '../../Models/Category/CategoryPodo.dart';
+import '../../Models/Category/CategoryListPodo.dart';
 import '../../Models/Category/DeletePodo.dart';
 
 class APIService {
 
   //  add categories
-  Future<AddPodo> add_category(
+  Future<CategoryPodo> add_category(
       String title, String description, String amount) async {
     final prefs = await SharedPreferences.getInstance();
-    Uri url = Uri.parse(URL.category_url);
+
+    var uid = prefs.getString(CONST.userId);
+    final token = prefs.getString(CONST.token) ?? "";
+
+    Uri url = Uri.parse(URL.user_url+"/$uid/category");
 
     try {
       final response = await http.post(
         url,
         headers: {
+          'Authorization': 'JWT $token',
           'Content-type': 'application/json',
           'Accept': 'application/json',
         },
@@ -36,7 +41,7 @@ class APIService {
       print(response.body.toString());
 
       if (response.statusCode == 200 || response.statusCode == 400) {
-        return AddPodo.fromJson(jsonDecode(response.body));
+        return CategoryPodo.fromJson(jsonDecode(response.body));
       } else {
         throw Exception('Failed to load album');
       }
@@ -52,16 +57,23 @@ class APIService {
     }
   }
 
-  //  category list
-  Future<AllCategoriesPodo> get_Allcategories() async {
+  //  category by user
+  Future<CategoryListPodo> category_by_user() async {
     final prefs = await SharedPreferences.getInstance();
-    Uri url = Uri.parse(URL.category_url);
+
+    var uid = prefs.getString(CONST.userId);
+    print(uid);
+    Uri url = Uri.parse(URL.user_url+"/$uid/category");
+
+    final token = prefs.getString(CONST.token) ?? "";
 
     try {
-      final response = await http.get(url);
+      final response = await http.get(url, headers: {
+        'Authorization': 'JWT $token'
+      });
 
       if (response.statusCode == 200 || response.statusCode == 400) {
-        return AllCategoriesPodo.fromJson(jsonDecode(response.body));
+        return CategoryListPodo.fromJson(jsonDecode(response.body));
       } else {
         ScaffoldMessenger(child: Text(response.statusCode.toString()));
         // throw Exception('Failed to load album');
@@ -72,17 +84,20 @@ class APIService {
   }
 
   //  update categories
-  Future<AddPodo> update_category(
+  Future<CategoryPodo> update_category(
       String title, String description, String amount) async {
     final prefs = await SharedPreferences.getInstance();
 
-    var id = prefs.getString(CONST.categoryId);
-    Uri url = Uri.parse(URL.category_url+"/$id");
+    var cid = prefs.getString(CONST.categoryId);
+    final token = prefs.getString(CONST.token) ?? "";
+
+    Uri url = Uri.parse(URL.category_url+"/$cid");
 
     try {
       final response = await http.put(
         url,
         headers: {
+          'Authorization': 'JWT $token',
           'Content-type': 'application/json',
           'Accept': 'application/json',
         },
@@ -97,7 +112,7 @@ class APIService {
       print(response.body.toString());
 
       if (response.statusCode == 200 || response.statusCode == 400) {
-        return AddPodo.fromJson(jsonDecode(response.body));
+        return CategoryPodo.fromJson(jsonDecode(response.body));
       } else {
         throw Exception('Failed to load album');
       }
@@ -116,13 +131,17 @@ class APIService {
   //  delete category
   Future<DeletePodo> delete_category() async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(CONST.token);
 
+    final token = prefs.getString(CONST.token);
     var id = prefs.getString(CONST.categoryId);
+
     Uri url = Uri.parse(URL.category_url+"/$id");
+    print(url);
 
     try {
-      final response = await http.delete(url);
+      final response = await http.delete(url, headers: {
+        'Authorization': 'JWT $token'
+      });
 
       if (response.statusCode == 200 || response.statusCode == 400) {
         return DeletePodo.fromJson(jsonDecode(response.body));

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tracker_ui/Expense/Common/theme.dart';
 import 'package:tracker_ui/Expense/Screens/Category/Category.dart';
+import 'package:tracker_ui/Expense/Screens/Registration/Login.dart';
 
 void main() {
   runApp(MyApp());
@@ -36,11 +37,11 @@ class _SplashState extends State<Splash> {
   AnimationController animationController;
   Animation<double> animation;
 
+  bool _isLoggedIn = false;
+
   @override
   void initState() {
-    Timer(const Duration(seconds: 3), () => Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => Category())));
-    // Future.delayed(const Duration(seconds: 1), () => _checkUserIsLogged());
+    Future.delayed(const Duration(seconds: 1), () => _checkUserIsLogged());
   }
 
   @override
@@ -63,6 +64,19 @@ class _SplashState extends State<Splash> {
         ),
       ),
     );
+  }
+
+  void _checkUserIsLogged()  {
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // _isLoggedIn = Prefs.instance.getBooleanValue(CONST.LoggedIn) as bool;
+
+    if (_isLoggedIn){
+      print('home');
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Category()));
+    } else if (!_isLoggedIn) {
+      print('login');
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Loginpg()));
+    }
   }
 
 }

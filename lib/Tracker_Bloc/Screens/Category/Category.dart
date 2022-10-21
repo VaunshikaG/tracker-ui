@@ -307,12 +307,12 @@ class _CategoryState extends State<Category> {
               SizedBox(
                 height: 40,
                 width: 100,
-                child: FlatButton(
-                  color: CustomTheme.Grey2,
-                  splashColor: CustomTheme.Blue3,
-                  hoverColor: CustomTheme.Blue3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: CustomTheme.Grey2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
                   onPressed: () => Navigator.of(buildContext).pop(),
                   child: const Text(
                     'Cancel',
@@ -329,12 +329,12 @@ class _CategoryState extends State<Category> {
                 builder: (context, snapshot) => SizedBox(
                   height: 40,
                   width: 100,
-                  child: FlatButton(
-                    color: CustomTheme.Grey2,
-                    splashColor: CustomTheme.Blue3,
-                    hoverColor: CustomTheme.Blue3,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: CustomTheme.Grey2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
                     onPressed: () {
                       // setState(() {
                       if (formKeys.currentState.validate()) {

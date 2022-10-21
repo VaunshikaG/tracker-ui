@@ -39,7 +39,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        ElevatedButton(
           child: const Text(
             'Cancel',
             style: TextStyle(
@@ -51,8 +51,10 @@ class _CategoryDetailsState extends State<CategoryDetails> {
             Navigator.of(context).pop();
           },
         ),
-        FlatButton(
-          color: CustomTheme.Coral2,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: CustomTheme.Coral2,
+          ),
           child: const Text(
             'Delete',
             style: TextStyle(

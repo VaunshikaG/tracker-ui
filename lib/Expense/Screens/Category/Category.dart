@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rounded_modal/rounded_modal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tracker_ui/Expense/Screens/Registration/Login.dart';
 
 import '../../Common/Constants.dart';
 import '../../Common/Helper.dart';
 import '../../Common/Prefs.dart';
 import '../../Common/theme.dart';
-import '../../Models/Category/AllCategoriesPodo.dart';
+import '../../Models/Category/CategoryListPodo.dart';
 import '../../Service/Category/Category_Api.dart';
 import 'Category_Details.dart';
 
@@ -24,37 +25,49 @@ class _CategoryState extends State<Category> {
   TextEditingController descController = TextEditingController();
   TextEditingController expenseController = TextEditingController();
 
+  bool _showData = false, _hideData = false;
+
 @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, this.categoryList);
+    // Future.delayed(Duration.zero, this.categoryList);
+  categoryList();
   }
 
   int categoryLength = 0;
-  List<Data> _categoryList;
+  List<Data> _categoryList = [];
   void categoryList() async {
+    showProgress(context, 'Please wait...', true);
     try {
-      showProgress(context, 'Please wait...', true);
       final prefs = await SharedPreferences.getInstance();
+      print("login = ${prefs.getBool(CONST.LoggedIn)}");
 
       APIService apiService = new APIService();
-      apiService.get_Allcategories().then((value) {
-        setState(() {
-          if (value != null) {
+      apiService.category_by_user().then((value) {
+        if (value != null) {
+          hideProgress();
+          print("get_Allcategories ${value.status}");
+          if (value.status == 200) {
             hideProgress();
-            print("get_Allcategories ${value.status}");
-            if (value.status.contains("200")) {
-              hideProgress();
-              categoryLength = value.data.length;
-              _categoryList = value.data;
-              // for (int i = 0; i< value.data.length; i++) {
-                // prefs.setString(CONST.categoryId, value.data[i].categoryId);
-              // }
+            categoryLength = value.data.length;
+            print(value.data.length);
+
+            if (value.data.length == 0) {
+              _hideData = true;
+              _showData = false;
             } else {
-              return "Failed to load data!";
+              _hideData = false;
+              _showData = true;
             }
+
+            _categoryList = value.data;
+            _categoryList.sort((a, b) {
+              return a.categoryId.compareTo(b.categoryId);
+            });
+          } else {
+            return "Failed to load data!";
           }
-        });
+        }
       });
     } catch (e) {
       print('cart exception = $e');
@@ -76,11 +89,10 @@ class _CategoryState extends State<Category> {
           if (value != null) {
             hideProgress();
             print("add_category ${value.status}");
-            if (value.status.contains("200")) {
+            if (value.status == 200) {
+              reload();
               print("$title  $description  $amount");
               ScaffoldMessenger(child: Text(value.message));
-              Navigator.of(context).pushReplacement(new MaterialPageRoute
-                (builder: (context) => Category()));
             } else {
               return "Failed to load data!";
             }
@@ -109,7 +121,7 @@ class _CategoryState extends State<Category> {
           ),
         ),
         content: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.47,
+          height: MediaQuery.of(context).size.height * 0.40,
           width: MediaQuery.of(context).size.width * 0.8,
           child: Form(
             key: formKeys,
@@ -123,7 +135,7 @@ class _CategoryState extends State<Category> {
                   child: Text(
                     'Name :',
                     style: TextStyle(
-                      fontSize: 17,
+                      // fontSize: 17,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.start,
@@ -140,10 +152,10 @@ class _CategoryState extends State<Category> {
                       return null;
                     },
                     // autofocus: true,
-                    textInputAction: TextInputAction.newline,
+                    textInputAction: TextInputAction.next,
                     // minLines: 1,
                     maxLines: 1,
-                    style: const TextStyle(fontSize: 17),
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
@@ -191,7 +203,7 @@ class _CategoryState extends State<Category> {
                   child: Text(
                     'Description :',
                     style: TextStyle(
-                      fontSize: 17,
+                      // fontSize: 17,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.start,
@@ -209,10 +221,9 @@ class _CategoryState extends State<Category> {
                     },
                     // autofocus: true,
                     keyboardType: TextInputType.multiline,
-                    textInputAction: TextInputAction.newline,
-                    // minLines: 1,
+                    textInputAction: TextInputAction.next,
                     maxLines: 3,
-                    style: const TextStyle(fontSize: 17),
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
@@ -260,7 +271,7 @@ class _CategoryState extends State<Category> {
                   child: Text(
                     'Total Expense :',
                     style: TextStyle(
-                      fontSize: 17,
+                      // fontSize: 17,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.start,
@@ -278,9 +289,9 @@ class _CategoryState extends State<Category> {
                     },
                     // autofocus: true,
                     keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.newline,
+                    textInputAction: TextInputAction.done,
                     maxLines: 1,
-                    style: const TextStyle(fontSize: 17),
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
@@ -332,12 +343,12 @@ class _CategoryState extends State<Category> {
               SizedBox(
                 height: 40,
                 width: 100,
-                child: FlatButton(
-                  color: CustomTheme.Grey2,
-                  splashColor: CustomTheme.Blue3,
-                  hoverColor: CustomTheme.Blue3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: CustomTheme.Grey2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
                   onPressed: () => Navigator.of(buildContext).pop(),
                   child: const Text(
                     'Cancel',
@@ -352,12 +363,12 @@ class _CategoryState extends State<Category> {
               SizedBox(
                 height: 40,
                 width: 100,
-                child: FlatButton(
-                  color: CustomTheme.Grey2,
-                  splashColor: CustomTheme.Blue3,
-                  hoverColor: CustomTheme.Blue3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: CustomTheme.Grey2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
                   onPressed: () {
                     setState(() {
                     if (formKeys.currentState.validate()) {
@@ -388,6 +399,7 @@ class _CategoryState extends State<Category> {
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: CustomTheme.Grey2,
@@ -397,92 +409,144 @@ class _CategoryState extends State<Category> {
               fontWeight: FontWeight.bold,
             ),
           ),
+          actions: [
+            IconButton(
+              alignment: const Alignment(0, 0),
+              icon: const Icon(Icons.refresh),
+              splashColor: Colors.white,
+              onPressed: () => reload(),
+            ),
+            IconButton(
+              alignment: const Alignment(0, 0),
+              icon: const Icon(Icons.logout),
+              splashColor: Colors.white,
+              onPressed: () {
+                Prefs.instance.removeAll();
+                print("user logged out");
+                Navigator.of(context).pushReplacement(new MaterialPageRoute
+                  (builder: (context) => Loginpg()));
+              },
+            ),
+          ],
           centerTitle: true,
         ),
-        body: Container(
+        body: SingleChildScrollView(
           child: Column(
             children: [
-              ListTile(
-                leading: Text(
-                  "NO.",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
+              Visibility(
+                visible: _hideData,
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.bottomCenter,
+                      height: 150,
+                      child: Text(
+                        'No Data Found',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/img/no-data.jpg',
+                    ),
+                  ],
                 ),
-                title: Text(
-                  "NAME",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                trailing: Text(
-                  "AMOUNT",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                tileColor: CustomTheme.Blue4,
-                visualDensity: VisualDensity.adaptivePlatformDensity,
               ),
-              Divider(
-                color: CustomTheme.Grey2,
-                height: 0,
-              ),
-              Expanded(
-                child: ListView.separated(
-                  itemCount: categoryLength ?? 0,
-                  physics: BouncingScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () async {
-                        final prefs = await SharedPreferences.getInstance();
-                        prefs.setString(
-                            CONST.categoryId, _categoryList[index].categoryId);
-                        prefs.setString(
-                            CONST.title, _categoryList[index].title);
-                        prefs.setString(
-                            CONST.desc, _categoryList[index].description);
-                        prefs.setString(
-                            CONST.amount, _categoryList[index].amount);
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => CategoryDetails()));
-                      },
-                      child: ListTile(
+              Visibility(
+                visible: _showData,
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    children: [
+                      ListTile(
                         leading: Text(
-                          _categoryList[index].categoryId,
+                          "NO.",
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 17,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         title: Text(
-                          _categoryList[index].title,
+                          "NAME",
                           style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          _categoryList[index].description,
-                          style: TextStyle(
+                            fontSize: 17,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         trailing: Text(
-                          _categoryList[index].amount.toString(),
+                          "AMOUNT",
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 17,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                        tileColor: CustomTheme.Blue4,
+                        visualDensity: VisualDensity.compact,
                       ),
-                    );
-                  },
-                  separatorBuilder: (context, index) => Divider(
-                    color: CustomTheme.Grey2,
+                      Divider(
+                        color: CustomTheme.Grey2,
+                        height: 0,
+                      ),
+                      Expanded(
+                        child: ListView.separated(
+                          itemCount: categoryLength ?? 0,
+                          physics: BouncingScrollPhysics(),
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              onTap: () async {
+                                final prefs = await SharedPreferences.getInstance();
+                                prefs.setString(
+                                    CONST.categoryId, _categoryList[index].categoryId);
+                                prefs.setString(
+                                    CONST.title, _categoryList[index].title);
+                                prefs.setString(
+                                    CONST.desc, _categoryList[index].description);
+                                prefs.setString(
+                                    CONST.amount, _categoryList[index].amount);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => CategoryDetails()));
+                              },
+                              child: ListTile(
+                                leading: Text(
+                                  (index+1).toString(),
+                                  // _categoryList[index].categoryId,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                title: Text(
+                                  _categoryList[index].title,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  _categoryList[index].description,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                trailing: Text(
+                                  _categoryList[index].amount.toString(),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                visualDensity: VisualDensity.compact,
+                              ),
+                            );
+                          },
+                          separatorBuilder: (context, index) => Divider(
+                            color: CustomTheme.Grey2,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -492,6 +556,7 @@ class _CategoryState extends State<Category> {
         floatingActionButton: Container(
           padding: const EdgeInsets.only(top: 10),
           child: FloatingActionButton.extended(
+            heroTag: UniqueKey(),
             label: const Text(
               "+ Add",
               style: TextStyle(
@@ -510,6 +575,13 @@ class _CategoryState extends State<Category> {
     );
   }
 
+  void reload() {
+    showProgress(context, 'Please wait...', true);
+    Navigator.of(context).pushReplacement(new MaterialPageRoute
+      (builder: (context) => Category()));
+    hideProgress();
+    print("refresh");
+  }
 
   Future<bool> _onWillPop() async {
    showRoundedModalBottomSheet(

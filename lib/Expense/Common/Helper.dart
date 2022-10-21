@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 ProgressDialog progressDialog;
 showProgress(BuildContext context, String message, bool isDismissible) async {
   progressDialog = new ProgressDialog(context,
-      type: ProgressDialogType.Normal, isDismissible: isDismissible);
+      type: ProgressDialogType.normal, isDismissible: isDismissible);
   progressDialog.style(
       message: message,
       borderRadius: 10.0,

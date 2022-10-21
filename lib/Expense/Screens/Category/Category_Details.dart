@@ -49,7 +49,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
           if (value != null) {
             hideProgress();
             print("add_category ${value.status}");
-            if (value.status.contains("200")) {
+            if (value.status == 200) {
               print("$title  $description  $amount");
 
               ScaffoldMessenger(child: Text(value.message));
@@ -67,6 +67,12 @@ class _CategoryDetailsState extends State<CategoryDetails> {
     }
   }
 
+  void reload() {
+    showProgress(context, 'Please wait...', true);
+    Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) => Category()));
+    print("refresh");
+  }
+
   void deletecategory() async {
     try {
       showProgress(context, 'Please wait...', true);
@@ -79,6 +85,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
             hideProgress();
             print("delete_category ${value.status}");
             if (value.status.contains("200")) {
+              print(value.message);
               ScaffoldMessenger(child: Text(value.message));
               Navigator.of(context).pushReplacement(new MaterialPageRoute
                 (builder: (context) => Category()));
@@ -103,7 +110,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        ElevatedButton(
           child: const Text(
             'Cancel',
             style: TextStyle(
@@ -115,8 +122,10 @@ class _CategoryDetailsState extends State<CategoryDetails> {
             Navigator.of(context).pop();
           },
         ),
-        FlatButton(
-          color: CustomTheme.Blue3,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: CustomTheme.Blue3,
+          ),
           child: const Text(
             'Delete',
             style: TextStyle(
@@ -159,214 +168,208 @@ class _CategoryDetailsState extends State<CategoryDetails> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Title',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                    ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 5),
+                child: Text(
+                  'Title',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Container(
-                    width: 230,
-                    alignment: Alignment.centerRight,
-                    child: TextFormField(
-                      controller: titleController,
-                      validator: (value) {
-                        if (value.isEmpty || value == null) {
-                          return 'Please enter title';
-                        }
-                        return null;
-                      },
-                      // autofocus: true,
-                      textInputAction: TextInputAction.newline,
-                      // minLines: 1,
-                      maxLines: 1,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                            style: BorderStyle.solid,
-                            width: 1,
-                            color: Colors.black,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                            style: BorderStyle.solid,
-                            width: 1,
-                            color: Colors.black,
-                          ),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                            style: BorderStyle.solid,
-                            width: 1,
-                            color: Colors.red,
-                          ),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                            style: BorderStyle.solid,
-                            width: 1,
-                            color: Colors.red,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Description',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                    ),
+              Container(
+                margin: const EdgeInsets.only(bottom: 25),
+                alignment: Alignment.centerRight,
+                child: TextFormField(
+                  controller: titleController,
+                  validator: (value) {
+                    if (value.isEmpty || value == null) {
+                      return 'Please enter title';
+                    }
+                    return null;
+                  },
+                  // autofocus: true,
+                  textInputAction: TextInputAction.newline,
+                  // minLines: 1,
+                  maxLines: 1,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Container(
-                    width: 230,
-                    height: 130,
-                    alignment: Alignment.centerRight,
-                    child: TextFormField(
-                      controller: descController,
-                      validator: (value) {
-                        if (value.isEmpty || value == null) {
-                          return 'Please enter description';
-                        }
-                        return null;
-                      },
-                      // autofocus: true,
-                      keyboardType: TextInputType.multiline,
-                      textInputAction: TextInputAction.newline,
-                      // minLines: 1,
-                      maxLines: 3,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                            style: BorderStyle.solid,
-                            width: 1,
-                            color: Colors.black,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                            style: BorderStyle.solid,
-                            width: 1,
-                            color: Colors.black,
-                          ),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                            style: BorderStyle.solid,
-                            width: 1,
-                            color: Colors.red,
-                          ),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                            style: BorderStyle.solid,
-                            width: 1,
-                            color: Colors.red,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: const BorderSide(
+                        style: BorderStyle.solid,
+                        width: 1,
+                        color: Colors.black,
                       ),
                     ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: const BorderSide(
+                        style: BorderStyle.solid,
+                        width: 1,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: const BorderSide(
+                        style: BorderStyle.solid,
+                        width: 1,
+                        color: Colors.red,
+                      ),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: const BorderSide(
+                        style: BorderStyle.solid,
+                        width: 1,
+                        color: Colors.red,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 5),
                   ),
-                ],
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total Expense',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                    ),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 5),
+                child: Text(
+                  'Description',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Container(
-                    width: 230,
-                    alignment: Alignment.centerRight,
-                    child: TextFormField(
-                      controller: amtController,
-                      validator: (value) {
-                        if (value.isEmpty || value == null) {
-                          return 'Please enter expense';
-                        }
-                        return null;
-                      },
-                      // autofocus: true,
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.newline,
-                      maxLines: 1,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                            style: BorderStyle.solid,
-                            width: 1,
-                            color: Colors.black,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                            style: BorderStyle.solid,
-                            width: 1,
-                            color: Colors.black,
-                          ),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                            style: BorderStyle.solid,
-                            width: 1,
-                            color: Colors.red,
-                          ),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                            style: BorderStyle.solid,
-                            width: 1,
-                            color: Colors.red,
-                          ),
-                        ),
-                        contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(bottom: 25),
+                alignment: Alignment.centerRight,
+                child: TextFormField(
+                  controller: descController,
+                  validator: (value) {
+                    if (value.isEmpty || value == null) {
+                      return 'Please enter description';
+                    }
+                    return null;
+                  },
+                  // autofocus: true,
+                  keyboardType: TextInputType.multiline,
+                  textInputAction: TextInputAction.newline,
+                  // minLines: 1,
+                  maxLines: 5,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: const BorderSide(
+                        style: BorderStyle.solid,
+                        width: 1,
+                        color: Colors.black,
                       ),
                     ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: const BorderSide(
+                        style: BorderStyle.solid,
+                        width: 1,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: const BorderSide(
+                        style: BorderStyle.solid,
+                        width: 1,
+                        color: Colors.red,
+                      ),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: const BorderSide(
+                        style: BorderStyle.solid,
+                        width: 1,
+                        color: Colors.red,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 5),
                   ),
-                ],
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 5),
+                child: Text(
+                  'Total Expense',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Container(
+                alignment: Alignment.centerRight,
+                child: TextFormField(
+                  controller: amtController,
+                  validator: (value) {
+                    if (value.isEmpty || value == null) {
+                      return 'Please enter expense';
+                    }
+                    return null;
+                  },
+                  // autofocus: true,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.newline,
+                  maxLines: 1,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: const BorderSide(
+                        style: BorderStyle.solid,
+                        width: 1,
+                        color: Colors.black,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: const BorderSide(
+                        style: BorderStyle.solid,
+                        width: 1,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: const BorderSide(
+                        style: BorderStyle.solid,
+                        width: 1,
+                        color: Colors.red,
+                      ),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: const BorderSide(
+                        style: BorderStyle.solid,
+                        width: 1,
+                        color: Colors.red,
+                      ),
+                    ),
+                    contentPadding:
+                    EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  ),
+                ),
               ),
             ],
           ),
@@ -376,6 +379,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
           spacing: 10,
           children: [
             FloatingActionButton.extended(
+              heroTag: UniqueKey(),
               icon: Icon(Icons.arrow_upward),
               label: const Text(
                 "Update",
@@ -390,6 +394,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
               hoverColor: CustomTheme.Blue3,
             ),
             FloatingActionButton.extended(
+              heroTag: UniqueKey(),
               icon: Icon(Icons.delete),
               label: const Text(
                 "Delete",
@@ -413,9 +418,6 @@ class _CategoryDetailsState extends State<CategoryDetails> {
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+
 
 }
