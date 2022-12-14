@@ -78,7 +78,7 @@ class APIService {
       if (response.statusCode == 200 || response.statusCode == 400) {
         // print('category_by_user ${response.body}');
         return CategoryListPodo.fromJson(
-            jsonDecode(response.body.replaceAll("\\\\", "\\")));
+            jsonDecode(response.body));
       } else {
         ScaffoldMessenger(child: Text(response.statusCode.toString()));
         // throw Exception('Failed to load album');
