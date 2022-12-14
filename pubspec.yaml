@@ -1,5 +1,5 @@
 name: tracker_ui
-description: A E_main.dart Flutter project.
+description: A main.dart Flutter project.
 
 #  ATBB2KfPTtxR8WHcyV6pH8VygsWb66A8CD01
 
@@ -14,15 +14,15 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   cupertino_icons: ^1.0.4
   splashscreen: ^1.3.5
   splash_screen_view: any
   animated_text_kit: ^4.2.1
   local_auth: ^1.1.9
-  http: any
+  http: ^0.13.5
+  intl: ^0.17.0
   provider: any
-  rxdart: any
+  rxdart: ^0.22.0
   flutter_session: ^0.1.1
   fluttertoast: ^8.0.9
   shared_preferences: any

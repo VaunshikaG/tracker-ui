@@ -1,151 +1,78 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tracker_ui/Expense/BLoC/Category/Category_BloC.dart';
 import 'package:tracker_ui/Expense/Common/Constants.dart';
-import '../../Common/Helper.dart';
+
+import '../../Common/snackbar.dart';
 import '../../Common/theme.dart';
-import '../../Service/Category/Category_Api.dart';
+import '../../Models/Category/CategoryListPodo.dart';
 import 'Category.dart';
 
 class CategoryDetails extends StatefulWidget {
+  final int screen;
+
+  //  0 = edit, 1 = add
+
+  const CategoryDetails({Key key, this.screen}) : super(key: key);
+
   @override
   State<CategoryDetails> createState() => _CategoryDetailsState();
 }
 
 class _CategoryDetailsState extends State<CategoryDetails> {
+  final catbloc = CategoryBloC();
+  Stream<CategoryListPodo> _getCat;
 
+  bool showSave = true, showUpdate = true, showDel = true;
   String id;
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descController = TextEditingController();
-  TextEditingController amtController = TextEditingController();
+  TextEditingController titleController = new TextEditingController();
+  TextEditingController descController = new TextEditingController();
+  TextEditingController amtController = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
     getPrefs();
+
+    _getCat = catbloc.catList;
   }
 
   void getPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    id = prefs.getString(CONST.categoryId);
-    titleController.text = prefs.getString(CONST.title);
-    descController.text = prefs.getString(CONST.desc);
-    amtController.text = prefs.getString(CONST.amount);
-    print(id);
-  }
+    //  0 = edit, 1 = add
 
-  void updatecategory() async {
-    try {
-      showProgress(context, 'Please wait...', true);
-      final prefs = await SharedPreferences.getInstance();
-
-      var title = titleController.text;
-      var description = descController.text;
-      var amount = amtController.text;
-
-      APIService apiService = new APIService();
-      apiService.update_category(title, description, amount).then((value) {
-        setState(() {
-          if (value != null) {
-            hideProgress();
-            print("add_category ${value.status}");
-            if (value.status == 200) {
-              print("$title  $description  $amount");
-
-              ScaffoldMessenger(child: Text(value.message));
-
-              Navigator.of(context).pushReplacement(new MaterialPageRoute
-                (builder: (context) => Category()));
-            } else {
-              return "Failed to load data!";
-            }
-          }
-        });
+    if (widget.screen == 0) {
+      setState(() {
+        showSave = false;
+        showUpdate = true;
+        showDel = true;
+        id = prefs.getString(CONST.categoryId);
+        titleController.text = prefs.getString(CONST.title);
+        descController.text = prefs.getString(CONST.desc);
+        amtController.text = prefs.getString(CONST.amount);
+        print("id:  $id ");
       });
-    } catch (e) {
-      print('cart exception = $e');
-    }
-  }
-
-  void reload() {
-    showProgress(context, 'Please wait...', true);
-    Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) => Category()));
-    print("refresh");
-  }
-
-  void deletecategory() async {
-    try {
-      showProgress(context, 'Please wait...', true);
-      final prefs = await SharedPreferences.getInstance();
-
-      APIService apiService = new APIService();
-      apiService.delete_category().then((value) {
-        setState(() {
-          if (value != null) {
-            hideProgress();
-            print("delete_category ${value.status}");
-            if (value.status.contains("200")) {
-              print(value.message);
-              ScaffoldMessenger(child: Text(value.message));
-              Navigator.of(context).pushReplacement(new MaterialPageRoute
-                (builder: (context) => Category()));
-            } else {
-              return "Failed to load data!";
-            }
-          }
-        });
+    } else if (widget.screen == 1) {
+      setState(() {
+        showSave = true;
+        showUpdate = false;
+        showDel = false;
+        id = "";
+        titleController.text = "";
+        descController.text = "";
+        amtController.text = "";
+        print("screen:  ${widget.screen}");
       });
-    } catch (e) {
-      print('cart exception = $e');
     }
-  }
-
-  showDeleteConfirmation() {
-    AlertDialog alert = AlertDialog(
-      title: const Text(
-        'Delete category?',
-        style: TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      actions: <Widget>[
-        ElevatedButton(
-          child: const Text(
-            'Cancel',
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: CustomTheme.Blue3,
-          ),
-          child: const Text(
-            'Delete',
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          onPressed: () => deletecategory(),
-        ),
-      ],
-    );
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        });
   }
 
   @override
   Widget build(BuildContext context) {
+    final catbloc = Provider.of<CategoryBloC>(context, listen: true);
+
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -159,254 +86,444 @@ class _CategoryDetailsState extends State<CategoryDetails> {
           centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Category())),
+            onPressed: () {
+              print("back");
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Category()));
+            },
           ),
         ),
-        body: Container(
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 5),
-                child: Text(
-                  'Title',
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 25),
-                alignment: Alignment.centerRight,
-                child: TextFormField(
-                  controller: titleController,
-                  validator: (value) {
-                    if (value.isEmpty || value == null) {
-                      return 'Please enter title';
-                    }
-                    return null;
-                  },
-                  // autofocus: true,
-                  textInputAction: TextInputAction.newline,
-                  // minLines: 1,
-                  maxLines: 1,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: const BorderSide(
-                        style: BorderStyle.solid,
-                        width: 1,
-                        color: Colors.black,
+        body: StreamBuilder(
+          stream: _getCat,
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              CategoryListPodo catList = snapshot.data;
+              return Container(
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // title
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 5),
+                      child: Text(
+                        'Title',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: const BorderSide(
-                        style: BorderStyle.solid,
-                        width: 1,
-                        color: Colors.grey,
+                    StreamBuilder<String>(
+                      stream: catbloc.title,
+                      builder: (context, AsyncSnapshot<String> snapshot) =>
+                          Container(
+                        margin: const EdgeInsets.only(bottom: 25),
+                        alignment: Alignment.centerRight,
+                        child: TextFormField(
+                          onChanged: catbloc.changedTitle,
+                          controller: titleController,
+                          validator: (value) {
+                            if (value.isEmpty || value == null) {
+                              return 'Please enter title';
+                            }
+                            return null;
+                          },
+                          textInputAction: TextInputAction.next,
+                          maxLines: 1,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(20),
+                            FilteringTextInputFormatter.singleLineFormatter,
+                          ],
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          decoration: InputDecoration(
+                            errorText: snapshot.error,
+                            errorStyle:
+                                const TextStyle(fontWeight: FontWeight.bold),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.black,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.red,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.red,
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
+                        ),
                       ),
                     ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: const BorderSide(
-                        style: BorderStyle.solid,
-                        width: 1,
-                        color: Colors.red,
-                      ),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: const BorderSide(
-                        style: BorderStyle.solid,
-                        width: 1,
-                        color: Colors.red,
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 5),
-                  ),
-                ),
-              ),
 
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 5),
-                child: Text(
-                  'Description',
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 25),
-                alignment: Alignment.centerRight,
-                child: TextFormField(
-                  controller: descController,
-                  validator: (value) {
-                    if (value.isEmpty || value == null) {
-                      return 'Please enter description';
-                    }
-                    return null;
-                  },
-                  // autofocus: true,
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.newline,
-                  // minLines: 1,
-                  maxLines: 5,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: const BorderSide(
-                        style: BorderStyle.solid,
-                        width: 1,
-                        color: Colors.black,
+                    //  desc
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 5),
+                      child: Text(
+                        'Description',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: const BorderSide(
-                        style: BorderStyle.solid,
-                        width: 1,
-                        color: Colors.grey,
+                    StreamBuilder<String>(
+                      stream: catbloc.desc,
+                      builder: (context, AsyncSnapshot<String> snapshot) =>
+                          Container(
+                        margin: const EdgeInsets.only(bottom: 25),
+                        alignment: Alignment.centerRight,
+                        child: TextFormField(
+                          onChanged: catbloc.changedDesc,
+                          controller: descController,
+                          validator: (value) {
+                            if (value.isEmpty || value == null) {
+                              return 'Please enter description';
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.multiline,
+                          textInputAction: TextInputAction.next,
+                          maxLines: 5,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(200),
+                          ],
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          decoration: InputDecoration(
+                            errorText: snapshot.error,
+                            errorStyle:
+                                const TextStyle(fontWeight: FontWeight.bold),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.black,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.red,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.red,
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
+                        ),
                       ),
                     ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: const BorderSide(
-                        style: BorderStyle.solid,
-                        width: 1,
-                        color: Colors.red,
-                      ),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: const BorderSide(
-                        style: BorderStyle.solid,
-                        width: 1,
-                        color: Colors.red,
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 5),
-                  ),
-                ),
-              ),
 
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 5),
-                child: Text(
-                  'Total Expense',
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
+                    //  amt
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 5),
+                      child: Text(
+                        'Total Expense',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    StreamBuilder<String>(
+                      stream: catbloc.amt,
+                      builder: (context, AsyncSnapshot<String> snapshot) =>
+                          Container(
+                        alignment: Alignment.centerRight,
+                        child: TextFormField(
+                          onChanged: catbloc.changedAmt,
+                          controller: amtController,
+                          validator: (value) {
+                            if (value.isEmpty || value == null) {
+                              return 'Please enter expense';
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.done,
+                          maxLines: 1,
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(7),
+                            FilteringTextInputFormatter.singleLineFormatter,
+                          ],
+                          decoration: InputDecoration(
+                            errorText: snapshot.error,
+                            errorStyle:
+                                const TextStyle(fontWeight: FontWeight.bold),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.black,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.red,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.red,
+                              ),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Container(
-                alignment: Alignment.centerRight,
-                child: TextFormField(
-                  controller: amtController,
-                  validator: (value) {
-                    if (value.isEmpty || value == null) {
-                      return 'Please enter expense';
-                    }
-                    return null;
-                  },
-                  // autofocus: true,
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.newline,
-                  maxLines: 1,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: const BorderSide(
-                        style: BorderStyle.solid,
-                        width: 1,
-                        color: Colors.black,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: const BorderSide(
-                        style: BorderStyle.solid,
-                        width: 1,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: const BorderSide(
-                        style: BorderStyle.solid,
-                        width: 1,
-                        color: Colors.red,
-                      ),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: const BorderSide(
-                        style: BorderStyle.solid,
-                        width: 1,
-                        color: Colors.red,
-                      ),
-                    ),
-                    contentPadding:
-                    EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  ),
-                ),
-              ),
-            ],
-          ),
+              );
+            } else if (snapshot.hasError) {
+              return Text('There was an error : ${snapshot.error}');
+            }
+            return Text('There was an error : ${snapshot.data}');
+          },
         ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
         floatingActionButton: Wrap(
           direction: Axis.vertical,
           spacing: 10,
           children: [
-            FloatingActionButton.extended(
-              heroTag: UniqueKey(),
-              icon: Icon(Icons.arrow_upward),
-              label: const Text(
-                "Update",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+            Visibility(
+              visible: showSave,
+              child: StreamBuilder(
+                stream: catbloc.isValid,
+                builder: (context, snapshot) => SizedBox(
+                  height: 45,
+                  width: 110,
+                  child: FloatingActionButton.extended(
+                    heroTag: UniqueKey(),
+                    icon: const Icon(CupertinoIcons.checkmark_alt, size: 20),
+                    label: const Text(
+                      "Save",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () async {
+                      print("save");
+                      if (snapshot.hasData) {
+                        catbloc.savecategory();
+
+                        WidgetsBinding.instance.addPostFrameCallback((_) =>
+                            Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                    builder: (context) => new Category())));
+                      } else if (snapshot.hasError) {
+                        return CustomSnackBar(context, Text(snapshot.error));
+                      }
+                      return Text('');
+                    },
+                    elevation: 10,
+                    backgroundColor: CustomTheme.Grey2,
+                    splashColor: CustomTheme.Blue3,
+                    hoverColor: CustomTheme.Blue3,
+                    extendedIconLabelSpacing: 5,
+                  ),
                 ),
               ),
-              onPressed: () => updatecategory(),
-              elevation: 10,
-              backgroundColor: CustomTheme.Grey2,
-              splashColor: CustomTheme.Blue3,
-              hoverColor: CustomTheme.Blue3,
             ),
-            FloatingActionButton.extended(
-              heroTag: UniqueKey(),
-              icon: Icon(Icons.delete),
-              label: const Text(
-                "Delete",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+            Visibility(
+              visible: showUpdate,
+              child: StreamBuilder(
+                stream: catbloc.isValid,
+                builder: (context, snapshot) => SizedBox(
+                  height: 45,
+                  width: 110,
+                  child: FloatingActionButton.extended(
+                    heroTag: UniqueKey(),
+                    icon: const Icon(CupertinoIcons.up_arrow, size: 18),
+                    label: const Text(
+                      "Update",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () async {
+                      print(snapshot.error);
+                      print(snapshot.hasData);
+                      print("update");
+                      if (snapshot.hasData) {
+                        catbloc.updatecategory();
+
+                        WidgetsBinding.instance.addPostFrameCallback((_) =>
+                            Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                    builder: (context) => new Category())));
+                      } else if (snapshot.hasError) {
+                        return CustomSnackBar(context, Text(snapshot.error));
+                      }
+                      return Text('');
+                    },
+                    elevation: 10,
+                    backgroundColor: CustomTheme.Grey2,
+                    splashColor: CustomTheme.Blue3,
+                    hoverColor: CustomTheme.Blue3,
+                    extendedIconLabelSpacing: 3,
+                  ),
                 ),
               ),
-              onPressed: () => showDeleteConfirmation(),
-              elevation: 10,
-              backgroundColor: CustomTheme.Grey2,
-              splashColor: CustomTheme.Blue3,
-              hoverColor: CustomTheme.Blue3,
+            ),
+            Visibility(
+              visible: showDel,
+              child: SizedBox(
+                height: 45,
+                width: 110,
+                child: FloatingActionButton.extended(
+                  heroTag: UniqueKey(),
+                  icon: const Icon(CupertinoIcons.delete, size: 17),
+                  label: const Text(
+                    "Delete",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () => showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text(
+                          'Delete category?',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        actions: <Widget>[
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey,
+                            ),
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          StreamBuilder(
+                              stream: catbloc.isValid,
+                              builder: (context, snapshot) {
+                                return ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: CustomTheme.Grey2,
+                                  ),
+                                  child: const Text(
+                                    'Delete',
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    print(snapshot.error);
+                                    print(snapshot.hasData);
+                                    print("delete");
+                                    if (snapshot.hasData) {
+                                      catbloc.deletecategory();
+
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) =>
+                                              Navigator.push(
+                                                  context,
+                                                  new MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          new Category())));
+                                    } else if (snapshot.hasError) {
+                                      return CustomSnackBar(
+                                          context, Text(snapshot.error));
+                                    }
+                                    return Text('');
+                                  },
+                                );
+                              }),
+                        ],
+                      );
+                    },
+                  ),
+                  elevation: 10,
+                  backgroundColor: CustomTheme.Grey2,
+                  splashColor: CustomTheme.Blue3,
+                  hoverColor: CustomTheme.Blue3,
+                  extendedIconLabelSpacing: 5,
+                ),
+              ),
             ),
           ],
         ),
@@ -418,6 +535,8 @@ class _CategoryDetailsState extends State<CategoryDetails> {
     );
   }
 
-
-
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

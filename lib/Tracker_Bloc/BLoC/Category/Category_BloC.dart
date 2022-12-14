@@ -25,7 +25,7 @@ class CategoryBloC with Validators {
   //  getter
   Stream<String> get title => _title.stream.transform(titleValidator);
   Stream<String> get desc => _desc.stream.transform(titleValidator);
-  Stream<bool> get isValid => Rx.combineLatest2(title, desc, (a, b) => true);
+  Stream<bool> get isValid => Observable.combineLatest2(title, desc, (a, b) => true);
 
   //  setters
   Function(String) get changedTitle => _title.sink.add;

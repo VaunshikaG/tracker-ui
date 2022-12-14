@@ -2,13 +2,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tracker_ui/Tracker_Bloc/BLoC/Registration/Validators.dart';
-import 'package:tracker_ui/Tracker_Bloc/Common/Constants.dart';
-import 'package:tracker_ui/Tracker_Bloc/Models/Registration/LoginModel.dart';
+import 'package:tracker_ui/Expense/BLoC/Registration/Validators.dart';
+import 'package:tracker_ui/Expense/Common/Constants.dart';
+import 'package:tracker_ui/Expense/Models/Registration/LoginPodo.dart';
+
 import '../../Service/Registration/Registration_Apis.dart';
 
 
+
 class LoginBLoC with Validators{
+  APIService apiService = new APIService();
+
   //  stream controllers
   final _lEmail = BehaviorSubject<String>();
   final _lPswd = BehaviorSubject<String>();
@@ -17,10 +21,9 @@ class LoginBLoC with Validators{
 
   //  getters
   Stream<String> get loginEmail => _lEmail.stream.transform(emailValidator);
-  Stream<String> get loginPswd => _lPswd.stream.transform(loginPswdValidator);
+  Stream<String> get loginPswd => _lPswd.stream.transform(pswdValidator);
 
-  Stream<bool> get isValid => Observable.combineLatest2(loginEmail, loginPswd,
-          (a, b) => true);
+  Stream<bool> get isValid => Observable.combineLatest2(loginEmail, loginPswd, (a, b) => true);
 
 
   // setters
@@ -31,10 +34,9 @@ class LoginBLoC with Validators{
   bool isLoggedIn = false;
 
   //  api call
-  dynamic submit(BuildContext buildContext) {
-    ApiService apiService = new ApiService();
+  dynamic submit(BuildContext buildContext) async {
 
-    apiService.login(_lEmail.value, _lPswd
+    await apiService.login(_lEmail.value, _lPswd
         .value, buildContext).then((value) async {
       if (value != null) {
         final prefs = await SharedPreferences.getInstance();
@@ -47,10 +49,8 @@ class LoginBLoC with Validators{
         prefs.setString(CONST.pswd, password);
         prefs.getString(CONST.token);
 
-        LoginModel loginModel = await apiService.login(email, password, buildContext);
-        _data.sink.add(loginModel);
-        // ApiService.setToken(data['token'], data['refresulthToken']);
-        // Navigator.of(buildContext).pushReplacement(MaterialPageRoute(builder: (buildContext) => Category()));
+        // LoginPodo loginPodo = await apiService.login(email, password, buildContext);
+        _data.sink.add;
       }
 
     });

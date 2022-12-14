@@ -3,6 +3,10 @@ import 'dart:async';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tracker_ui/Expense/BLoC/Category/Category_BloC.dart';
+import 'package:tracker_ui/Expense/BLoC/Registration/Login_BloC.dart';
+import 'package:tracker_ui/Expense/BLoC/Registration/Signup_BloC.dart';
 import 'package:tracker_ui/Expense/Common/theme.dart';
 import 'package:tracker_ui/Expense/Screens/Category/Category.dart';
 import 'package:tracker_ui/Expense/Screens/Registration/Login.dart';
@@ -12,21 +16,33 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Expense Tracker',
-      theme: ThemeData(
-        fontFamily: 'Nunito',
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return MultiProvider(
+      providers: [
+        Provider<LoginBLoC>(
+          create: (context) => LoginBLoC(),
+        ),
+        Provider<SignupBLoC>(
+          create: (context) => SignupBLoC(),
+        ),
+        Provider<CategoryBloC>(
+          create: (context) => CategoryBloC(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Expense Tracker',
+        theme: ThemeData(
+          fontFamily: 'Nunito',
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: Splash(),
+        // home: Category(),
       ),
-      home: Splash(),
     );
   }
 }
-
 
 class Splash extends StatefulWidget {
   @override
@@ -55,7 +71,7 @@ class _SplashState extends State<Splash> {
               'EXPENSE TRACKER',
               textStyle: const TextStyle(
                 fontSize: 36.0,
-                color: CustomTheme.Coral1,
+                color: CustomTheme.Grey2,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
@@ -66,19 +82,20 @@ class _SplashState extends State<Splash> {
     );
   }
 
-  void _checkUserIsLogged()  {
+  void _checkUserIsLogged() {
     // final SharedPreferences prefs = await SharedPreferences.getInstance();
     // _isLoggedIn = Prefs.instance.getBooleanValue(CONST.LoggedIn) as bool;
 
-    if (_isLoggedIn){
+    if (_isLoggedIn) {
       print('home');
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Category()));
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => Category()));
     } else if (!_isLoggedIn) {
       print('login');
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Loginpg()));
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => Loginpg()));
     }
   }
-
 }
 
 Widget text() {

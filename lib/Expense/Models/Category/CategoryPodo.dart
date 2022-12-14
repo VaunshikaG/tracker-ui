@@ -1,12 +1,12 @@
 class CategoryPodo {
-  Data data;
+  CategoryData data;
   String message;
   int status;
 
   CategoryPodo({this.data, this.message, this.status});
 
   CategoryPodo.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new CategoryData.fromJson(json['data']) : null;
     message = json['message'];
     status = json['status'];
   }
@@ -22,16 +22,16 @@ class CategoryPodo {
   }
 }
 
-class Data {
+class CategoryData {
   String categoryId;
   String title;
   String description;
   String amount;
   User user;
 
-  Data({this.categoryId, this.title, this.description, this.amount, this.user});
+  CategoryData({this.categoryId, this.title, this.description, this.amount, this.user});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  CategoryData.fromJson(Map<String, dynamic> json) {
     categoryId = json['categoryId'].toString();
     title = json['title'];
     description = json['description'];

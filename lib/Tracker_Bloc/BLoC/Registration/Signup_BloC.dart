@@ -25,7 +25,7 @@ class SignupBLoC with Validators{
   Stream<String> get signupEmail => _sEmail.stream.transform(emailValidator);
   Stream<String> get signupPswd => _sPswd.stream.transform(signupPswdValidator);
 
-  Stream<bool> get isValid => Rx.combineLatest4(fName, lName, _sEmail,_sPswd, (a, b, c, d) => true);
+  Stream<bool> get isValid => Observable.combineLatest4(fName, lName, _sEmail,_sPswd, (a, b, c, d) => true);
 
 
   // setters

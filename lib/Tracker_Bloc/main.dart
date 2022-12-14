@@ -86,8 +86,8 @@ class _SplashState extends State<Splash> {
             WavyAnimatedText(
               'TRACKER',
               textStyle: const TextStyle(
-                fontSize: 40.0,
-                color: CustomTheme.Coral1,
+                fontSize: 40,
+                color: CustomTheme.Grey2,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
@@ -119,7 +119,7 @@ Widget text() {
       TypewriterAnimatedText(
         'TRACKER',
         textStyle: TextStyle(
-          fontSize: 35.0,
+          fontSize: 35,
           color: CustomTheme.Coral1,
           fontWeight: FontWeight.bold,
         ),
@@ -129,7 +129,7 @@ Widget text() {
       WavyAnimatedText(
         'TRACKER',
         textStyle: TextStyle(
-          fontSize: 40.0,
+          fontSize: 40,
           color: CustomTheme.Coral1,
           fontWeight: FontWeight.bold,
         ),
@@ -147,7 +147,7 @@ Widget text() {
 Text(
                 "TRACKER",
                 style: TextStyle(
-                  fontSize: 35.0,
+                  fontSize: 35,
                   color: CustomTheme.Coral1,
                   fontWeight: FontWeight.bold,
                 ),
@@ -162,7 +162,7 @@ SplashScreen(
           title: Text("TRACKER"),
           // title: text(),
           styleTextUnderTheLoader: TextStyle(
-            fontSize: 35.0,
+            fontSize: 35,
             color: CustomTheme.Coral1,
             fontWeight: FontWeight.bold,
             textBaseline: TextBaseline.alphabetic,
@@ -200,7 +200,7 @@ SplashScreenView(
           text: "TRACKER",
           textType: TextType.TyperAnimatedText,
           textStyle: TextStyle(
-            fontSize: 35.0,
+            fontSize: 35,
             color: CustomTheme.Coral1,
             fontWeight: FontWeight.bold,
           ),
