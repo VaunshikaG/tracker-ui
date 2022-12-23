@@ -381,13 +381,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                     onPressed: () async {
                       print("save");
                       if (snapshot.hasData) {
-                        catbloc.savecategory();
-
-                        WidgetsBinding.instance.addPostFrameCallback((_) =>
-                            Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                    builder: (context) => new Category())));
+                        catbloc.savecategory(context);
                       } else if (snapshot.hasError) {
                         return CustomSnackBar(context, Text(snapshot.error));
                       }
@@ -432,13 +426,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                       print(snapshot.hasData);
                       print("update");
                       if (snapshot.hasData) {
-                        catbloc.updatecategory();
-
-                        WidgetsBinding.instance.addPostFrameCallback((_) =>
-                            Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                    builder: (context) => Category())));
+                        catbloc.updatecategory(context);
                       } else if (snapshot.hasError) {
                         return CustomSnackBar(context, Text(snapshot.error));
                       }
@@ -527,15 +515,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                                     print(snapshot.hasData);
                                     print("delete");
                                     if (snapshot.hasData) {
-                                      catbloc.deletecategory();
-
-                                      WidgetsBinding.instance
-                                          .addPostFrameCallback((_) =>
-                                              Navigator.push(
-                                                  context,
-                                                  new MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          new Category())));
+                                      catbloc.deletecategory(context);
                                     } else if (snapshot.hasError) {
                                       return CustomSnackBar(
                                           context, Text(snapshot.error));

@@ -9,6 +9,7 @@ import 'package:tracker_ui/Expense/Common/Prefs.dart';
 import '../../Models/Category/CategoryListPodo.dart';
 import '../../Models/Category/CategoryPodo.dart';
 import '../../Models/Category/CategoryReqModel.dart';
+import '../../Screens/Category/Category.dart';
 import '../../Service/Category/Category_Api.dart';
 
 final catbloc = CategoryBloC();
@@ -51,9 +52,9 @@ class CategoryBloC with Validators {
   //  add category - post call
   final _data = PublishSubject();
 
-  dynamic savecategory() async {
+  dynamic savecategory(BuildContext buildContext) async {
     apiService
-        .add_category(_title.value, _desc.value, _amt.value)
+        .add_category(_title.value, _desc.value, _amt.value, buildContext)
         .then((value) {
       if (value != null) {
         String title = _title.value;
@@ -61,20 +62,29 @@ class CategoryBloC with Validators {
         String amt = _amt.value;
         Prefs.instance.getStringValue(CONST.token);
 
-        // CategoryPodo categoryPodo = await apiService.add_category(title, desc, amt);
         _data.sink.add;
+        WidgetsBinding.instance.addPostFrameCallback((_) =>
+            Navigator.push(
+                buildContext,
+                new MaterialPageRoute(
+                    builder: (context) => new Category())));
         print('category added');
       }
     });
   }
 
-  dynamic deletecategory() async {
+  dynamic deletecategory(BuildContext buildContext) async {
     try {
-      await apiService.delete_category().then((value) {
+      await apiService.delete_category(buildContext).then((value) {
         if (value != null) {
           print("delete_category ${value.status}");
           if (value.status.contains("200")) {
             print(value.message);
+            WidgetsBinding.instance.addPostFrameCallback((_) =>
+                Navigator.push(
+                    buildContext,
+                    new MaterialPageRoute(
+                        builder: (context) => new Category())));
             ScaffoldMessenger(child: Text(value.message));
           } else {
             return "Failed to load data!";
@@ -86,7 +96,7 @@ class CategoryBloC with Validators {
     }
   }
 
-  dynamic updatecategory() async {
+  dynamic updatecategory(BuildContext buildContext) async {
     try {
       // _categoryReqModel.title = _title.value;
       // _categoryReqModel.description = _desc.value;
@@ -95,12 +105,19 @@ class CategoryBloC with Validators {
 
       // await apiService.update_category(_categoryReqModel)
       await apiService
-          .update_category(_title.value, _desc.value, _amt.value)
+          .update_category(_title.value, _desc.value, _amt.value, buildContext)
           .then((value) {
         if (value != null) {
           print("update_category ${value.status}");
           if (value.status == 200) {
             _data.sink.add;
+
+
+            WidgetsBinding.instance.addPostFrameCallback((_) =>
+                Navigator.push(
+                    buildContext,
+                    new MaterialPageRoute(
+                        builder: (context) => new Category())));
             print('category updated:  ${value.message}');
           } else {
             return "Failed to load data!";

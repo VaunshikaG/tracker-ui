@@ -129,7 +129,7 @@ class CategoryState extends State<Category> {
                         prefs.setString(CONST.title, note.title);
                         prefs.setString(CONST.desc, note.description);
                         prefs.setString(CONST.amount, note.amount);
-                        await catbloc.deletecategory();
+                        await catbloc.deletecategory(context);
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: const Text('You just deleted a note'),
@@ -141,7 +141,7 @@ class CategoryState extends State<Category> {
                               note.description = prefs.getString(CONST.desc);
                               note.amount = prefs.getString(CONST.amount);
 
-                              await catbloc.savecategory();
+                              await catbloc.savecategory(context);
                               refreshCall();
                             },
                             label: "UNDO",
@@ -266,7 +266,7 @@ class CategoryState extends State<Category> {
     );
   }
 
-  Widget old() {
+  /*Widget old() {
     final catbloc = Provider.of<CategoryBloC>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.white,
@@ -474,7 +474,7 @@ class CategoryState extends State<Category> {
         ),
       ),
     );
-  }
+  }*/
 
 
   void refreshCall() async {
