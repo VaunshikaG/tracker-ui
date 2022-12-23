@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -43,17 +44,25 @@ class APIService {
       if (response.statusCode == 200 || response.statusCode == 400) {
         return CategoryPodo.fromJson(jsonDecode(response.body));
       } else {
+        print(response.statusCode);
         throw Exception('Failed to load album');
       }
-    } on SocketException {
-      Fluttertoast.showToast(
-        msg: "No internet connection",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        textColor: Colors.white,
-        fontSize: 16.0,
-        backgroundColor: Colors.black,
-      );
+    } catch (e) {
+      if (e is SocketException) {
+        Fluttertoast.showToast(
+            msg: "Please check your internet connection",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.grey[200],
+            textColor: Colors.red,
+            fontSize: 16.0);
+        print("Socket exception: ${e.toString()}");
+      } else if (e is TimeoutException) {
+        print("Timeout exception: ${e.toString()}");
+      } else {
+        print("Unhandled exception: ${e.toString()}");
+      }
     }
   }
 
@@ -63,6 +72,7 @@ class APIService {
 
     var uid = prefs.getString(CONST.userId);
 
+    // Uri url = Uri.parse(URL.user_url + "/1/category");
     Uri url = Uri.parse(URL.user_url + "/$uid/category");
     print(url);
 
@@ -80,12 +90,70 @@ class APIService {
         return CategoryListPodo.fromJson(
             jsonDecode(response.body));
       } else {
-        ScaffoldMessenger(child: Text(response.statusCode.toString()));
-        // throw Exception('Failed to load album');
+        print(response.statusCode);
+        throw Exception('Failed to load album');
       }
     } catch (e) {
-      print(e);
-      throw e;
+      if (e is SocketException) {
+        Fluttertoast.showToast(
+            msg: "Please check your internet connection",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.grey[200],
+            textColor: Colors.red,
+            fontSize: 16.0);
+        print("Socket exception: ${e.toString()}");
+      } else if (e is TimeoutException) {
+        print("Timeout exception: ${e.toString()}");
+      } else {
+        print("Unhandled exception: ${e.toString()}");
+      }
+    }
+  }
+
+  //  category by id
+  Future<CategoryPodo> category_by_id() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    var cid = prefs.getString(CONST.categoryId);
+
+    // Uri url = Uri.parse(URL.user_url + "/1/category");
+    Uri url = Uri.parse(URL.category_url + "/$cid");
+    print(url);
+
+    final token = prefs.getString(CONST.token) ?? "";
+
+    try {
+      final response = await http.get(url, headers: {
+        'Authorization': 'JWT $token',
+        "Content-Type": "application/json",
+        'Accept': '*/*',
+      });
+
+      if (response.statusCode == 200 || response.statusCode == 400) {
+        return CategoryPodo.fromJson(
+            jsonDecode(response.body));
+      } else {
+        print(response.statusCode);
+        throw Exception('Failed to load album');
+      }
+    } catch (e) {
+      if (e is SocketException) {
+        Fluttertoast.showToast(
+            msg: "Please check your internet connection",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.grey[200],
+            textColor: Colors.red,
+            fontSize: 16.0);
+        print("Socket exception: ${e.toString()}");
+      } else if (e is TimeoutException) {
+        print("Timeout exception: ${e.toString()}");
+      } else {
+        print("Unhandled exception: ${e.toString()}");
+      }
     }
   }
 
@@ -112,7 +180,7 @@ class APIService {
         },
         body:
             // reqModel.toJson(),
-            jsonEncode(<String, String>{
+        jsonEncode(<String, String>{
           "title": title,
           "description": description,
           "amount": amount,
@@ -124,17 +192,25 @@ class APIService {
       if (response.statusCode == 200 || response.statusCode == 400) {
         return CategoryPodo.fromJson(jsonDecode(response.body));
       } else {
+        print(response.statusCode);
         throw Exception('Failed to load album');
       }
-    } on SocketException {
-      Fluttertoast.showToast(
-        msg: "No internet connection",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        textColor: Colors.white,
-        fontSize: 16.0,
-        backgroundColor: Colors.black,
-      );
+    } catch (e) {
+      if (e is SocketException) {
+        Fluttertoast.showToast(
+            msg: "Please check your internet connection",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.grey[200],
+            textColor: Colors.red,
+            fontSize: 16.0);
+        print("Socket exception: ${e.toString()}");
+      } else if (e is TimeoutException) {
+        print("Timeout exception: ${e.toString()}");
+      } else {
+        print("Unhandled exception: ${e.toString()}");
+      }
     }
   }
 
@@ -155,11 +231,25 @@ class APIService {
       if (response.statusCode == 200 || response.statusCode == 400) {
         return DeletePodo.fromJson(jsonDecode(response.body));
       } else {
-        ScaffoldMessenger(child: Text(response.statusCode.toString()));
-        // throw Exception('Failed to load album');
+        print(response.statusCode);
+        throw Exception('Failed to load album');
       }
     } catch (e) {
-      throw e;
+      if (e is SocketException) {
+        Fluttertoast.showToast(
+            msg: "Please check your internet connection",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.grey[200],
+            textColor: Colors.red,
+            fontSize: 16.0);
+        print("Socket exception: ${e.toString()}");
+      } else if (e is TimeoutException) {
+        print("Timeout exception: ${e.toString()}");
+      } else {
+        print("Unhandled exception: ${e.toString()}");
+      }
     }
   }
 }

@@ -7,6 +7,7 @@ import 'package:tracker_ui/Expense/Common/Constants.dart';
 import 'package:tracker_ui/Expense/Common/Prefs.dart';
 
 import '../../Models/Category/CategoryListPodo.dart';
+import '../../Models/Category/CategoryPodo.dart';
 import '../../Models/Category/CategoryReqModel.dart';
 import '../../Service/Category/Category_Api.dart';
 
@@ -41,6 +42,10 @@ class CategoryBloC with Validators {
   //  get call
   Stream<CategoryListPodo> get catList async* {
     yield await apiService.category_by_user();
+  }
+
+  Stream<CategoryPodo> get cat_by_id async* {
+    yield await apiService.category_by_id();
   }
 
   //  add category - post call

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tracker_ui/Expense/BLoC/Registration/Validators.dart';
-import 'package:tracker_ui/Expense/Models/Registration/RegisterPodo.dart';
 import '../../Common/Constants.dart';
 import '../../Screens/Category/Category.dart';
 import '../../Service/Registration/Registration_Apis.dart';
+import '../../Widgets/Helper.dart';
+import '../../Widgets/snackbar.dart';
 
 
 final blocSignup = SignupBLoC();
@@ -32,22 +33,62 @@ class SignupBLoC with Validators{
 
   //  api call
   dynamic submit(BuildContext buildContext) async {
+    showProgress(buildContext, 'Please wait...', false);
 
     await apiService.register(_sEmail.value, _sPswd.value, buildContext).then
       ((value) async {
       if (value != null) {
-        final prefs = await SharedPreferences.getInstance();
+        hideProgress();
+        if (value.status == 201) {
+          final prefs = await SharedPreferences.getInstance();
 
-        String email = _sEmail.value;
-        String password = _sPswd.value;
+          String email = _sEmail.value;
+          String password = _sPswd.value;
 
-        prefs.setBool(CONST.LoggedIn, true);
-        prefs.setString(CONST.email, email);
-        prefs.setString(CONST.pswd, password);
-        prefs.getString(CONST.token);
+          prefs.setBool(CONST.LoggedIn, true);
+          prefs.setString(CONST.email, email);
+          prefs.setString(CONST.pswd, password);
+          prefs.getString(CONST.token);
 
-        // RegisterPodo registerPodo = await apiService.register(email, password, buildContext);
-        _data.sink.add;
+          _data.sink.add;
+          WidgetsBinding.instance.addPostFrameCallback((_) => Navigator.push(buildContext,
+                  new MaterialPageRoute(builder: (context) => new Category())));
+        } else if (value.status != 201) {
+          hideProgress();
+          CustomSnackBar(buildContext, Text(value.message));
+        }
+      }
+    });
+
+    print(_sEmail);
+    print(_sPswd);
+  }
+
+  dynamic email_otp(BuildContext buildContext) async {
+    // showProgress(buildContext, 'Sending email...', true);
+
+    await apiService.email_otp(_sEmail.value, buildContext).then
+      ((value) async {
+      if (value != null) {
+        // hideProgress();
+        if (value.status == 200) {
+          final prefs = await SharedPreferences.getInstance();
+
+          String email = _sEmail.value;
+          String password = _sPswd.value;
+
+          prefs.setBool(CONST.LoggedIn, true);
+          prefs.setString(CONST.email, email);
+          prefs.setString(CONST.pswd, password);
+          prefs.setString(CONST.otp, value.data.otp);
+
+          _data.sink.add;
+
+
+        } else if (value.status != 200) {
+          // hideProgress();
+          CustomSnackBar(buildContext, Text(value.message));
+        }
       }
     });
 
@@ -59,5 +100,6 @@ class SignupBLoC with Validators{
     _sEmail.close();
     _sPswd.close();
   }
+
 }
 

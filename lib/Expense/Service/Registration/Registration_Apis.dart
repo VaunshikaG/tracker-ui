@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Common/Constants.dart';
+import '../../Models/Registration/EmailModel.dart';
 import '../../Models/Registration/LoginPodo.dart';
 import '../../Models/Registration/RegisterPodo.dart';
 
@@ -45,23 +46,31 @@ class APIService {
         print(response.body);
         throw Exception('Failed to load album');
       }
-    } on SocketException {
-      Fluttertoast.showToast(
-        msg: "No internet connection",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        textColor: Colors.white,
-        fontSize: 16.0,
-        backgroundColor: Colors.black,
-      );
+    } catch (e) {
+      if (e is SocketException) {
+        Fluttertoast.showToast(
+            msg: "Please check your internet connection",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.grey[200],
+            textColor: Colors.red,
+            fontSize: 16.0);
+        print("Socket exception: ${e.toString()}");
+      } else if (e is TimeoutException) {
+        print("Timeout exception: ${e.toString()}");
+      } else {
+        print("Unhandled exception: ${e.toString()}");
+      }
     }
   }
 
   //  email verification
-  Future<RegisterPodo> verify_email(
+  Future<EmailModel> email_otp(
       String email, BuildContext buildContext) async {
     final prefs = await SharedPreferences.getInstance();
-    Uri url = Uri.parse(URL.otp_url);
+    Uri url = Uri.parse(URL.otp_url+email);
+    print(url);
 
     try {
       final response = await http.post(
@@ -76,23 +85,30 @@ class APIService {
       print(response.body.toString());
 
       if (response.statusCode == 200 || response.statusCode == 400) {
-        final res = RegisterPodo.fromJson(jsonDecode(response.body));
-        print(res.data.email);
-        return RegisterPodo.fromJson(jsonDecode(response.body));
+        final res = EmailModel.fromJson(jsonDecode(response.body));
+        print(res.data.datetime);
+        return EmailModel.fromJson(jsonDecode(response.body));
       } else if (response.statusCode == 207) {
-        return RegisterPodo.fromJson(jsonDecode(response.body));
+        return EmailModel.fromJson(jsonDecode(response.body));
       } else {
         throw Exception('Failed to load album');
       }
-    } on SocketException {
-      Fluttertoast.showToast(
-        msg: "No internet connection",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        textColor: Colors.white,
-        fontSize: 16.0,
-        backgroundColor: Colors.black,
-      );
+    } catch (e) {
+      if (e is SocketException) {
+        Fluttertoast.showToast(
+            msg: "Please check your internet connection",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.grey[200],
+            textColor: Colors.red,
+            fontSize: 16.0);
+        print("Socket exception: ${e.toString()}");
+      } else if (e is TimeoutException) {
+        print("Timeout exception: ${e.toString()}");
+      } else {
+        print("Unhandled exception: ${e.toString()}");
+      }
     }
   }
 
@@ -117,14 +133,6 @@ class APIService {
 
       if (response.statusCode == 200 || response.statusCode == 400) {
         print(response.body);
-        final res = LoginPodo.fromJson(jsonDecode(response.body));
-
-        prefs.setString(CONST.userId, res.data.userId);
-        print('user_id : ${res.data.userId}');
-
-        prefs.setString(CONST.token, res.data.token);
-        print('token : ${res.data.token}');
-
         return LoginPodo.fromJson(jsonDecode(response.body));
       } else if (response.statusCode == 401) {
         // print(response.body);

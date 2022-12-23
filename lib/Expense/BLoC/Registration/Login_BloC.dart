@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,7 +7,11 @@ import 'package:tracker_ui/Expense/BLoC/Registration/Validators.dart';
 import 'package:tracker_ui/Expense/Common/Constants.dart';
 import 'package:tracker_ui/Expense/Models/Registration/LoginPodo.dart';
 
+import '../../Common/Prefs.dart';
+import '../../Screens/Category/Category.dart';
 import '../../Service/Registration/Registration_Apis.dart';
+import '../../Widgets/Helper.dart';
+import '../../Widgets/snackbar.dart';
 
 
 
@@ -35,24 +40,40 @@ class LoginBLoC with Validators{
 
   //  api call
   dynamic submit(BuildContext buildContext) async {
+    showProgress(buildContext, 'Please wait...', false);
 
     await apiService.login(_lEmail.value, _lPswd
         .value, buildContext).then((value) async {
       if (value != null) {
-        final prefs = await SharedPreferences.getInstance();
+        hideProgress();
+        if (value.status == 200) {
+          final prefs = await SharedPreferences.getInstance();
 
-        String email = _lEmail.value;
-        String password = _lPswd.value;
+          String email = _lEmail.value;
+          String password = _lPswd.value;
 
-        prefs.setBool(CONST.LoggedIn, true);
-        prefs.setString(CONST.email, email);
-        prefs.setString(CONST.pswd, password);
-        prefs.getString(CONST.token);
+          prefs.setBool(CONST.LoggedIn, true);
+          prefs.setString(CONST.pswd, password);
+          prefs.getString(CONST.token);
 
-        // LoginPodo loginPodo = await apiService.login(email, password, buildContext);
-        _data.sink.add;
+          prefs.setString(CONST.email, value.data.email);
+          prefs.setString(CONST.userId, value.data.userId);
+          print('user_id : ${value.data.userId}');
+
+          prefs.setString(CONST.token, value.data.token);
+          print('token : ${value.data.token}');
+
+          print('login success!!');
+          Prefs.instance.setBooleanValue(CONST.LoggedIn, true);
+
+          WidgetsBinding.instance.addPostFrameCallback((_) =>
+              Navigator.push(buildContext, new MaterialPageRoute(builder: (context) => new Category())));
+          _data.sink.add;
+        } else if (value.status != 200) {
+          hideProgress();
+          CustomSnackBar(buildContext, Text(value.message));
+        }
       }
-
     });
 
     print(_lEmail.value);

@@ -9,8 +9,8 @@ mixin Validators {
       if (email.isEmpty) {
         return sink.addError("Please enter email");
       }
-      if (email.length >= 20) {
-        return sink.addError("Email should be less than 20 characters");
+      if (email.length >= 30) {
+        return sink.addError("Email should be less than 30 characters");
       }
       if (email.length <= 6) {
         return sink.addError("Email should be more than 8 characters");

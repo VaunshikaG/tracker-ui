@@ -1,31 +1,72 @@
 import 'dart:ui';
+import 'dart:convert';
+import 'package:flutter/material.dart';
 
 class CustomTheme {
   const CustomTheme();
 
   //  0xFF  constant for color
 
-  static const Color Coral1 = Color(0xffffa47a);
-  static const Color Coral2 = Color(0xffffc09b);
-  static const Color Coral3 = Color(0xffffdec9);
-  static const Color Coral4 = Color(0xfffffbf1);
+  static const Color coral1 = Color(0xffff5100);
+  static const Color coral2 = Color(0xffffa47a);
+  static const Color grey = Color(0xFF153b50);
+  static const Color grey2 = Color(0xFF687980);
+
+  static const Color blue1 = Color(0xFF0D47A1);
+  static const Color blue2 = Color(0xffc6e3e3);
+  static const Color blue3 = Color(0xffdff1f1);
+
+  //  new
+  static const Color pink1 = Color(0xffEB455F);
+  static const Color pink2 = Color(0xffF3BDA1);
+  static const Color blu1 = Color(0xff2B3467);
+  static const Color blu2 = Color(0xffBAD7E9);
+  static const Color blu3 = Color(0xffFFFF);
+  static const Color white1 = Color(0xffFCFFE7);
 
 
-  static const Color White1 = Color(0xffeff2f9);
-  static const Color White2 = Color(0xffe4ebf1);
-  static const Color White3 = Color(0xffb5bfc6);
-
-
-  static const Color Grey1 = Color(0xFF0a2342);
-  static const Color Grey2 = Color(0xFF153b50);
-  static const Color Grey3 = Color(0xFF73877b);
-  static const Color Grey4 = Color(0xfff1f2eb);
-
-
-  static const Color Blue1 = Color(0xFF0D47A1);
-  static const Color Blue2 = Color(0xffc1def1);
-  static const Color Blue3 = Color(0xffc6e3e3);
-  static const Color Blue4 = Color(0xffdff1f1);
-  static const Color Blue5 = Color(0xffeefafa);
+  static const black = Colors.black;
 
 }
+
+const green = Color(0xFF00C2A8);
+const blue = Color(0xFF0089BA);
+const lavander = Color(0xFF845EC2);
+const purple = Color(0xFFD65DB1);
+const pink = Color(0xFFFF6F91);
+const orange = Color(0xFFFF9671);
+const yellow = Color(0xFFFFC75F);
+
+List<Color> colorList = [
+  green,
+  blue,
+  lavander,
+  purple,
+  pink,
+  orange,
+  yellow
+];
+
+
+
+ColorList colorListFromJson(String str) => ColorList.fromJson(json.decode(str));
+
+String colorListToJson(ColorList data) => json.encode(data.toJson());
+
+class ColorList {
+  ColorList({
+    this.colorList,
+  });
+
+  List<Color> colorList;
+
+  factory ColorList.fromJson(Map<String, dynamic> json) => ColorList(
+    colorList: json["colorList"] == null ? null : List<Color>.from(json["colorList"].map((x) => x)),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "colorList": colorList == null ? null : List<dynamic>.from(colorList.map((x) => x)),
+  };
+}
+
+
