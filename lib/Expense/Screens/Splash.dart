@@ -57,7 +57,10 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
           Align(
             alignment: Alignment(-0.8, 0.06),
             child: Container(
-              child: Image.asset("assets/img/blank_logo_transparent.png"),
+              child: Image.asset(
+                "assets/img/blank_logo_transparent.png",
+                color: Colors.black,
+              ),
             ),
           ),
           Align(
@@ -70,7 +73,8 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                     'Expensify',
                     textStyle: TextStyle(
                       fontSize: 55,
-                      color: CustomTheme.blu1.withOpacity(0.6),
+                      color: Colors.black,
+                      // color: CustomTheme.grey,
                       // fontWeight: FontWeight.bold,
                       fontFamily: 'Sacramento',
                     ),

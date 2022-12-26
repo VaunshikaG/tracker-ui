@@ -79,9 +79,8 @@ class _CategoryDetailsState extends State<CategoryDetails> {
 
     return WillPopScope(
       child: Scaffold(
-        // backgroundColor: ,
         appBar: AppBar(
-          backgroundColor: CustomTheme.grey2,
+          backgroundColor: CustomTheme.grey,
           title: Text(
           (widget.screen == 0) ? 'Edit' : 'Save',
             style: TextStyle(
@@ -347,7 +346,6 @@ class _CategoryDetailsState extends State<CategoryDetails> {
             ],
           ),
         ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
         floatingActionButton: Wrap(
           direction: Axis.vertical,
           spacing: 10,
@@ -388,7 +386,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                       return Text('');
                     },
                     elevation: 5,
-                    backgroundColor: CustomTheme.grey2,
+                    backgroundColor: CustomTheme.grey,
                     splashColor: Colors.white,
                     extendedIconLabelSpacing: 5,
                   ),
@@ -433,7 +431,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                       return Text('');
                     },
                     elevation: 5,
-                    backgroundColor: CustomTheme.grey2,
+                    backgroundColor: CustomTheme.grey,
                     splashColor: Colors.white,
                     extendedIconLabelSpacing: 3,
                   ),
@@ -529,7 +527,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                     },
                   ),
                   elevation: 5,
-                  backgroundColor: CustomTheme.grey2,
+                  backgroundColor: CustomTheme.grey,
                   splashColor: Colors.white,
                   extendedIconLabelSpacing: 5,
                 ),

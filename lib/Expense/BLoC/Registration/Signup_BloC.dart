@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tracker_ui/Expense/BLoC/Registration/Validators.dart';
 import '../../Common/Constants.dart';
 import '../../Screens/Category/Category.dart';
+import '../../Screens/Registration/Login.dart';
 import '../../Service/Registration/Registration_Apis.dart';
 import '../../Widgets/Helper.dart';
 import '../../Widgets/snackbar.dart';
@@ -47,12 +48,12 @@ class SignupBLoC with Validators{
 
           prefs.setBool(CONST.LoggedIn, true);
           prefs.setString(CONST.email, email);
-          prefs.setString(CONST.pswd, password);
+          prefs.setString(CONST.userId, value.data.uid.toString());
           prefs.getString(CONST.token);
 
           _data.sink.add;
           WidgetsBinding.instance.addPostFrameCallback((_) => Navigator.push(buildContext,
-                  new MaterialPageRoute(builder: (context) => new Category())));
+                  new MaterialPageRoute(builder: (context) => new Loginpg())));
         } else if (value.status != 201) {
           hideProgress();
           CustomSnackBar(buildContext, Text(value.message));

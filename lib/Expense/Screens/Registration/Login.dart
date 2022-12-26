@@ -767,7 +767,7 @@ class _LoginpgState extends State<Loginpg> {
   Widget otp_verify() {
     final signup_bloc = Provider.of<SignupBLoC>(context, listen: false);
 
-    // signup_bloc.email_otp(context);
+    signup_bloc.email_otp(context);
     print("otp_verify");
     showDialog(
         context: context,
@@ -775,100 +775,81 @@ class _LoginpgState extends State<Loginpg> {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter stateSetter) {
             return AlertDialog(
-              title: _isOtp
-                  ? Text(
-                      "Email Verification",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      softWrap: true,
-                    )
-                  : null,
+              title: Text(
+                _isOtp
+                    ? 'Enter the verification code received on ${emailController.text}'
+                    : 'Your email ${emailController.text} is verified',
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+                softWrap: true,
+              ),
               content: Container(
+                padding: EdgeInsets.zero,
                 width: MediaQuery.of(dialogcontext).size.width * 1.5,
                 height: _isOtp
-                    ? MediaQuery.of(dialogcontext).size.height * 0.27
+                    ? MediaQuery.of(dialogcontext).size.height * 0.15
                     : MediaQuery.of(dialogcontext).size.height * 0.25,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Pinput(
+                      length: 4,
+                      controller: otpController,
+                      pinputAutovalidateMode:
+                      PinputAutovalidateMode.onSubmit,
+                      showCursor: true,
+                      onCompleted: (pin) => print(pin),
+                      defaultPinTheme: defaultPinTheme,
+                      focusedPinTheme: defaultPinTheme.copyDecorationWith(
+                        border: Border.all(
+                            color: Color.fromRGBO(92, 143, 191, 1)),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      submittedPinTheme: defaultPinTheme.copyWith(
+                        decoration: defaultPinTheme.decoration.copyWith(
+                          color: Color.fromRGBO(233, 241, 248, 1.0),
+                        ),
+                      ),
+                    ),
                     Visibility(
                       visible: _isOtp,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
-                            child: Text(
-                              'Enter the verification code received on ${emailController.text}',
-                              style: const TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              softWrap: true,
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 20),
+                        height: 40,
+                        width: 130,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: CustomTheme.grey,
+                          ),
+                          child: Text(
+                            "Confirm",
+                            style: const TextStyle(
+                              fontSize: 17,
+                              letterSpacing: 1,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Pinput(
-                            length: 6,
-                            controller: otpController,
-                            pinputAutovalidateMode:
-                                PinputAutovalidateMode.onSubmit,
-                            showCursor: true,
-                            onCompleted: (pin) => print(pin),
-                            defaultPinTheme: defaultPinTheme,
-                            focusedPinTheme: defaultPinTheme.copyDecorationWith(
-                              border: Border.all(
-                                  color: Color.fromRGBO(92, 143, 191, 1)),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            submittedPinTheme: defaultPinTheme.copyWith(
-                              decoration: defaultPinTheme.decoration.copyWith(
-                                color: Color.fromRGBO(233, 241, 248, 1.0),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 20),
-                            height: 40,
-                            width: 130,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: CustomTheme.grey,
-                              ),
-                              child: Text(
-                                "Confirm",
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                  letterSpacing: 1,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              onPressed: () async {
-                                final prefs = await SharedPreferences.getInstance();
-                                var str_otp = prefs.getString(CONST.otp);
-                                print(otpController.text);
-                                if (str_otp == otpController.text) {
-                                  setState(() {
-                                    print("verified");
-                                    verified(stateSetter);
-                                    otpController.text = "";
-                                  });
-                                } else {
-                                  setState(() {
-                                    print("invalid");
-                                    otp(stateSetter);
-                                    otpController.text = "";
-                                  });
-                                }
-                              },
-                            ),
-                          ),
-                        ],
+                          onPressed: () async {
+                            final prefs = await SharedPreferences.getInstance();
+                            var str_otp = prefs.getString(CONST.otp);
+                            print(otpController.text);
+                            if (str_otp == otpController.text) {
+                              setState(() {
+                                print("verified");
+                                verified(stateSetter);
+                              });
+                            } else {
+                              setState(() {
+                                print("invalid");
+                                otp(stateSetter);
+                                otpController.text = "";
+                              });
+                            }
+                          },
+                        ),
                       ),
                     ),
                     Visibility(
@@ -877,32 +858,21 @@ class _LoginpgState extends State<Loginpg> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Text(
-                            "Email Verification Successful !!!",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            softWrap: true,
-                          ),
                           Image.asset(
                             'assets/img/verify.jpg',
-                            height: 130,
+                            height: 100,
                           ),
                           Container(
                             margin: const EdgeInsets.only(top: 10),
                             height: 40,
                             width: 130,
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                side: BorderSide(color: CustomTheme.grey),
-                                // backgroundColor: CustomTheme.grey,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: CustomTheme.grey,
                               ),
                               child: Text(
                                 "Continue",
                                 style: const TextStyle(
-                                  color: CustomTheme.grey,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -912,7 +882,7 @@ class _LoginpgState extends State<Loginpg> {
                                   print('register success!!');
                                   Prefs.instance.setBooleanValue(CONST.LoggedIn, true);
                                   signup_bloc.submit(dialogcontext);
-                                  otp(stateSetter);
+                                  otpController.text = "";
                                   Navigator.of(dialogcontext).pop();
                                 });
                               },
