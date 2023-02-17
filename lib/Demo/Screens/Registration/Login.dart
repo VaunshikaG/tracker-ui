@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tracker_ui/Expense/BLoC/Registration/Login_BloC.dart';
-import 'package:tracker_ui/Expense/BLoC/Registration/Signup_BloC.dart';
+import 'package:tracker_ui/Demo/BLoC/Registration/Login_BloC.dart';
+import 'package:tracker_ui/Demo/BLoC/Registration/Signup_BloC.dart';
 
 import '../../Common/Constants.dart';
 import '../../Common/Prefs.dart';
@@ -25,8 +25,8 @@ class _LoginpgState extends State<Loginpg> {
   bool _isVerified = false, _isOtp = true;
   bool _isObscure = true, _isLogin = true, _isSignup = false;
 
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController pswdController = new TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController pswdController = TextEditingController();
   TextEditingController otpController = TextEditingController();
 
   final defaultPinTheme = PinTheme(
@@ -45,6 +45,7 @@ class _LoginpgState extends State<Loginpg> {
 
   @override
   void initState() {
+    otpController.text = "1234";
     super.initState();
   }
 
@@ -69,7 +70,7 @@ class _LoginpgState extends State<Loginpg> {
                   child: Container(
                     width: constraint.maxWidth / 0.8,
                     height: constraint.maxHeight / 1.5,
-                    decoration: new BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: CustomTheme.grey2,
                       shape: BoxShape.circle,
                     ),
@@ -96,7 +97,7 @@ class _LoginpgState extends State<Loginpg> {
                   child: Container(
                     width: constraint.maxWidth / 0.6,
                     height: constraint.maxHeight / 1.5,
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.5),
                       shape: BoxShape.circle,
                     ),
@@ -124,19 +125,19 @@ class _LoginpgState extends State<Loginpg> {
                   child: Container(
                     alignment: AlignmentDirectional.topCenter,
                     width: constraint.maxWidth / 2.6,
-                    padding: EdgeInsets.all(30),
-                    decoration: new BoxDecoration(
+                    padding: const EdgeInsets.all(30),
+                    decoration: const BoxDecoration(
                       color: CustomTheme.grey2,
                       shape: BoxShape.circle,
                     ),
-                    child: _isSignup ? Text(
+                    child: _isSignup ? const Text(
                       'Heyy\nnew user !!',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
-                    ): Text(
+                    ): const Text(
                       'Welcome\nback !!',
                       style: TextStyle(
                         color: Colors.white,
@@ -170,7 +171,7 @@ class _LoginpgState extends State<Loginpg> {
                     width: constraint.maxWidth / 1.5,
                     height: constraint.maxHeight / 1.8,
                     child: SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
+                      physics: const BouncingScrollPhysics(),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -180,7 +181,7 @@ class _LoginpgState extends State<Loginpg> {
                               width: 150,
                             ),
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Visibility(
                             visible: _isLogin,
                             child: Column(
@@ -227,10 +228,10 @@ class _LoginpgState extends State<Loginpg> {
                                                 decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: Color.alphaBlend(
-                                                      Color(0xAAFFFFFF),
+                                                      const Color(0xAAFFFFFF),
                                                       CustomTheme.blu3),
                                                   constraints:
-                                                  BoxConstraints(maxWidth: 300),
+                                                  const BoxConstraints(maxWidth: 300),
                                                   hintText: 'Email',
                                                   errorText: snapshot.error,
                                                   errorStyle: const TextStyle(
@@ -307,10 +308,10 @@ class _LoginpgState extends State<Loginpg> {
                                                 decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: Color.alphaBlend(
-                                                      Color(0xAAFFFFFF),
+                                                      const Color(0xAAFFFFFF),
                                                       CustomTheme.blu3),
                                                   constraints:
-                                                  BoxConstraints(maxWidth: 300),
+                                                  const BoxConstraints(maxWidth: 300),
                                                   hintText: 'Password',
                                                   errorText: snapshot.error,
                                                   errorStyle: const TextStyle(
@@ -385,15 +386,11 @@ class _LoginpgState extends State<Loginpg> {
                                                       vertical: 0),
                                                   elevation: 5,
                                                 ),
-                                                onPressed: () async {
-                                                  print("pressed");
-                                                  if (snapshot.hasData) {
-                                                    login_bloc.submit(context);
-                                                  } else if (snapshot.hasError) {
-                                                    return CustomSnackBar(context,
-                                                        Text(snapshot.error));
-                                                  }
-                                                  return const Text('error');
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _isLogin = false;
+                                                    _isSignup = true;
+                                                  });
                                                 },
                                                 child: const Text(
                                                   'Login',
@@ -519,10 +516,10 @@ class _LoginpgState extends State<Loginpg> {
                                                 decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: Color.alphaBlend(
-                                                      Color(0xAAFFFFFF),
+                                                      const Color(0xAAFFFFFF),
                                                       CustomTheme.blu3),
                                                   constraints:
-                                                  BoxConstraints(maxWidth: 300),
+                                                  const BoxConstraints(maxWidth: 300),
                                                   hintText: 'Email',
                                                   errorText: snapshot.error,
                                                   errorStyle: const TextStyle(
@@ -598,10 +595,10 @@ class _LoginpgState extends State<Loginpg> {
                                                 decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: Color.alphaBlend(
-                                                      Color(0xAAFFFFFF),
+                                                      const Color(0xAAFFFFFF),
                                                       CustomTheme.blu3),
                                                   constraints:
-                                                  BoxConstraints(maxWidth: 300),
+                                                  const BoxConstraints(maxWidth: 300),
                                                   hintText: 'Password',
                                                   errorText: snapshot.error,
                                                   errorStyle: const TextStyle(
@@ -679,14 +676,130 @@ class _LoginpgState extends State<Loginpg> {
                                                   elevation: 5,
                                                 ),
                                                 onPressed: () async {
-                                                  if (snapshot.hasData && formKeys.currentState.validate()) {
-                                                    formKeys.currentState.save();
-                                                    otp_verify();
-                                                  } else if (snapshot.hasError) {
-                                                    formKeys.currentState.save();
-                                                    return CustomSnackBar(context, Text(snapshot.error));
-                                                  }
-                                                  return Text('error');
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (dialogcontext) {
+                                                        return StatefulBuilder(
+                                                            builder: (BuildContext context, StateSetter stateSetter) {
+                                                              return AlertDialog(
+                                                                title: Text(
+                                                                  _isOtp
+                                                                      ? 'Enter the verification code received on ____@gmail.com'
+                                                                      : 'Your email ____@gmail.com is verified',
+                                                                  style: const TextStyle(
+                                                                    fontSize: 17,
+                                                                    fontWeight: FontWeight.bold,
+                                                                  ),
+                                                                  softWrap: true,
+                                                                ),
+                                                                content: Container(
+                                                                  padding: EdgeInsets.zero,
+                                                                  width: MediaQuery.of(dialogcontext).size.width * 1.5,
+                                                                  height: _isOtp
+                                                              ? MediaQuery.of(dialogcontext).size.height * 0.15
+                                                              : MediaQuery.of(dialogcontext).size.height * 0.20,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    children: [
+                                                                      Visibility(
+                                                                        visible: _isOtp,
+                                                                        child: Column(
+                                                                          children: [
+                                                                            Pinput(
+                                                                              length: 4,
+                                                                              controller: otpController,
+                                                                              pinputAutovalidateMode:
+                                                                              PinputAutovalidateMode.onSubmit,
+                                                                              showCursor: true,
+                                                                              onCompleted: (pin) => print(pin),
+                                                                              defaultPinTheme: defaultPinTheme,
+                                                                              focusedPinTheme: defaultPinTheme.copyDecorationWith(
+                                                                                border: Border.all(
+                                                                                    color: const Color.fromRGBO(92, 143, 191, 1)),
+                                                                                borderRadius: BorderRadius.circular(8),
+                                                                              ),
+                                                                              submittedPinTheme: defaultPinTheme.copyWith(
+                                                                                decoration: defaultPinTheme.decoration.copyWith(
+                                                                                  color: const Color.fromRGBO(233, 241, 248, 1.0),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            Container(
+                                                                              margin: const EdgeInsets.only(top: 20),
+                                                                              height: 40,
+                                                                              width: 130,
+                                                                              child: ElevatedButton(
+                                                                                style: ElevatedButton.styleFrom(
+                                                                                  backgroundColor: CustomTheme.grey,
+                                                                                ),
+                                                                                child: const Text(
+                                                                                  "Confirm",
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 17,
+                                                                                    letterSpacing: 1,
+                                                                                    fontWeight: FontWeight.w600,
+                                                                                  ),
+                                                                                ),
+                                                                                onPressed: () async {
+                                                                                  if (otpController.text == "1234") {
+                                                                                    setState(() {
+                                                                                      print("verified");
+                                                                                      verified(stateSetter);
+                                                                                    });
+                                                                                  } else {
+                                                                                    setState(() {
+                                                                                      print("invalid");
+                                                                                      otp(stateSetter);
+                                                                                      otpController.text = "";
+                                                                                    });
+                                                                                  }
+                                                                                },
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      Visibility(
+                                                                        visible: _isVerified,
+                                                                        child: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                                          children: [
+                                                                            Image.asset(
+                                                                              'assets/img/verify.jpg',
+                                                                              height: 100,
+                                                                            ),
+                                                                            Container(
+                                                                              margin: const EdgeInsets.only(top: 10),
+                                                                              height: 40,
+                                                                              width: 130,
+                                                                              child: ElevatedButton(
+                                                                                style: ElevatedButton.styleFrom(
+                                                                                  backgroundColor: CustomTheme.grey,
+                                                                                ),
+                                                                                child: const Text(
+                                                                                  "Continue",
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 16,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                                ),
+                                                                                onPressed: () {
+                                                                                    Navigator.of(dialogcontext).pop();
+                                                                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Category()));
+                                                                                },
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            });
+                                                      });
                                                 },
                                                 child: const Text(
                                                   'Sign up',
@@ -764,141 +877,6 @@ class _LoginpgState extends State<Loginpg> {
     );
   }
 
-  Widget otp_verify() {
-    final signup_bloc = Provider.of<SignupBLoC>(context, listen: false);
-
-    signup_bloc.email_otp(context);
-    print("otp_verify");
-    showDialog(
-        context: context,
-        builder: (dialogcontext) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter stateSetter) {
-                return AlertDialog(
-                  title: Text(
-                    _isOtp
-                        ? 'Enter the verification code received on ${emailController.text}'
-                        : 'Your email ${emailController.text} is verified',
-                    style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    softWrap: true,
-                  ),
-                  content: Container(
-                    padding: EdgeInsets.zero,
-                    width: MediaQuery.of(dialogcontext).size.width * 1.5,
-                    height: _isOtp
-                        ? MediaQuery.of(dialogcontext).size.height * 0.15
-                        : MediaQuery.of(dialogcontext).size.height * 0.25,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Pinput(
-                          length: 4,
-                          controller: otpController,
-                          pinputAutovalidateMode:
-                          PinputAutovalidateMode.onSubmit,
-                          showCursor: true,
-                          onCompleted: (pin) => print(pin),
-                          defaultPinTheme: defaultPinTheme,
-                          focusedPinTheme: defaultPinTheme.copyDecorationWith(
-                            border: Border.all(
-                                color: Color.fromRGBO(92, 143, 191, 1)),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          submittedPinTheme: defaultPinTheme.copyWith(
-                            decoration: defaultPinTheme.decoration.copyWith(
-                              color: Color.fromRGBO(233, 241, 248, 1.0),
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: _isOtp,
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 20),
-                            height: 40,
-                            width: 130,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: CustomTheme.grey,
-                              ),
-                              child: Text(
-                                "Confirm",
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                  letterSpacing: 1,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              onPressed: () async {
-                                final prefs = await SharedPreferences.getInstance();
-                                var str_otp = prefs.getString(CONST.otp);
-                                print(otpController.text);
-                                if (str_otp == otpController.text) {
-                                  setState(() {
-                                    print("verified");
-                                    verified(stateSetter);
-                                  });
-                                } else {
-                                  setState(() {
-                                    print("invalid");
-                                    otp(stateSetter);
-                                    otpController.text = "";
-                                  });
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: _isVerified,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/img/verify.jpg',
-                                height: 100,
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(top: 10),
-                                height: 40,
-                                width: 130,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: CustomTheme.grey,
-                                  ),
-                                  child: Text(
-                                    "Continue",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      print('register success!!');
-                                      Prefs.instance.setBooleanValue(CONST.LoggedIn, true);
-                                      signup_bloc.submit(dialogcontext);
-                                      otpController.text = "";
-                                      Navigator.of(dialogcontext).pop();
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              });
-        });
-  }
-
   Future<Null> verified(StateSetter updateState) async {
     updateState(() {
       _isVerified = true;
@@ -919,4 +897,3 @@ class _LoginpgState extends State<Loginpg> {
     super.dispose();
   }
 }
-
