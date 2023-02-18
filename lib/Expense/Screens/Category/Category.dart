@@ -43,7 +43,7 @@ class CategoryState extends State<Category> {
         fontSize: 30,
         color: CustomTheme.pink2,
         fontWeight: FontWeight.w600,
-        fontFamily: 'Sacramento',
+        fontFamily: "Sacramento",
       ),
     ),
   );
@@ -108,7 +108,7 @@ class CategoryState extends State<Category> {
                               fontSize: 30,
                               color: CustomTheme.pink2,
                               fontWeight: FontWeight.w600,
-                              fontFamily: 'Sacramento',
+
                             ),
                           ),
                         );
@@ -164,11 +164,11 @@ class CategoryState extends State<Category> {
                     'Get started by clicking the below button',
                     softWrap: true,
                     style: TextStyle(
-                      fontSize: 45,
+                      fontSize: 25,
                       letterSpacing: 1,
                       color: CustomTheme.grey,
                       fontWeight: FontWeight.normal,
-                      fontFamily: 'Sacramento',
+
                     ),
                   ),
                 );
@@ -261,7 +261,7 @@ class CategoryState extends State<Category> {
                   fontSize: 30,
                   color: CustomTheme.pink2,
                   fontWeight: FontWeight.w600,
-                  fontFamily: 'Sacramento',
+
                 ),
               ),
             );
@@ -365,7 +365,7 @@ class CategoryState extends State<Category> {
                   fontSize: 30,
                   color: CustomTheme.pink2,
                   fontWeight: FontWeight.w600,
-                  fontFamily: 'Sacramento',
+
                 ),
               ),
             ),

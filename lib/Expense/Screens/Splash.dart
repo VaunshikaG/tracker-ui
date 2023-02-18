@@ -76,7 +76,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                       color: Colors.black,
                       // color: CustomTheme.grey,
                       // fontWeight: FontWeight.bold,
-                      fontFamily: 'Sacramento',
+                      fontFamily: "Sacramento",
                     ),
                     textAlign: TextAlign.center,
                   ),

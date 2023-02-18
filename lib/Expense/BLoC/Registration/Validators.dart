@@ -36,7 +36,7 @@ mixin Validators {
         return sink.addError("Password should be more than 6 characters");
       }
       if(!RegExp(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$").hasMatch(pswd)) {
-        return sink.addError('Enter valid email');
+        return sink.addError('Enter valid password');
       } else {
         sink.add(pswd);
       }

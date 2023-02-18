@@ -1,7 +1,7 @@
 class URL {
   const URL();
 
-  static const String app_url = 'http://10.0.0.5:8080/expense';
+  static const String app_url = 'http://10.0.0.4:8080/expense';
   // static const String app_url = 'http://172.20.10.4:8080/expense';
 
   static const String register_url = app_url + '/user/register';
